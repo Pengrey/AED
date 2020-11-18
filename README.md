@@ -7,3 +7,5 @@ AED
 Actions required
 Shoot to kill
 No mercy
+2020/11/18__21horas	Fixed 'fixed'
+
