@@ -16,3 +16,4 @@ Ja nao da segFault
 2020/11/19__22horas	Ja meti la sry por nao ter feito isto antes
  e Sorry pelo barulho que vai fazer
 2020/11/19__22horas	Sorry por nao ter dado commit e pelo barulhinho que vai dar
+2020/11/19__23horas	3__1.c
