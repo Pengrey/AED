@@ -18,3 +18,4 @@ Ja nao da segFault
 2020/11/19__22horas	Sorry por nao ter dado commit e pelo barulhinho que vai dar
 2020/11/19__23horas	3__1.c
 2020/11/19__23horas	tenta fazer make
+2020/11/19__23horas	tenta fazer make
