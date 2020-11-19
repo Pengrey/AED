@@ -13,3 +13,5 @@ No mercy
 Ja nao da segFault
  I see this as an absolute win
 
+2020/11/19__22horas	Ja meti la sry por nao ter feito isto antes
+ e Sorry pelo barulho que vai fazer
