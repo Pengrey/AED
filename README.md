@@ -20,3 +20,4 @@ Ja nao da segFault
 2020/11/19__23horas	tenta fazer make
 2020/11/19__23horas	tenta fazer make
 2020/11/20__08horas	deu 25 casos e 35k de lucro very strange
+2020/11/20__09horas	deu 25 casos e 35k de lucro very strange
