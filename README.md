@@ -15,10 +15,16 @@ Ja nao da segFault
 
 2020/11/19__22horas	Ja meti la sry por nao ter feito isto antes
  e Sorry pelo barulho que vai fazer
+ 
 2020/11/19__22horas	Sorry por nao ter dado commit e pelo barulhinho que vai dar
+
 2020/11/19__23horas	3__1.c
+
 2020/11/19__23horas	tenta fazer make
 2020/11/19__23horas	tenta fazer make
+
 2020/11/20__08horas	deu 25 casos e 35k de lucro very strange
+
 2020/11/20__09horas	deu 25 casos e 35k de lucro very strange
+
 2020/11/20__10horas	A
