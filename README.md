@@ -30,3 +30,4 @@ Ja nao da segFault
 2020/11/20__10horas	A
 2020/11/21__11horas	
 2020/11/21__15horas	Mais uma versao
+2020/11/21__15horas	Mais uma versao
