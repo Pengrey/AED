@@ -55,7 +55,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "../../P02/elapsed_time.h"
+#include "../../../P02/elapsed_time.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -263,12 +263,12 @@ void init_problem(int NMec, int T, int P, int ignore_profit, problem_t *problem)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // problem solution (place your solution here)
-int actualRecurseOne(int j, int i, /*int arr[][3]*/ task_t *task)
+int actualRecurseOne(int j, int i, /*int arr[][3]*/ task_t *task, int num_tasks)
 { //i - task a ser trabalhada agora (nº da task) / j- ultima task que foi aceite
 
   static int prev;  //
   prev = task[j].ending_date; // prev = valor do tempo final da task previamente -- arr[j][2] transformsinto task[j].ending_date
-  if (i > 8)
+  if (i > num_tasks)
   {           // caso terminal, ao fim do array task acabar recur  NOTAS: 0--starting_date  | 1--ending_date
     return 1; //
   }           //
@@ -289,12 +289,12 @@ int actualRecurseOne(int j, int i, /*int arr[][3]*/ task_t *task)
     printf("Atual i = %d\n", i);      // print da task atualmente a ser avaliada (debugg)
     prev = task[j].ending_date;                 // prev fica com o valor da data final da task a ser avaliada
     i++;                              // adicionar +1 a i para atestar a task seguinte
-    return 1 + actualRecurseOne(j, i, task); // soma de +1 ao result caso se adicione uma task ao path
+    return 1 + actualRecurseOne(j, i, task,num_tasks); // soma de +1 ao result caso se adicione uma task ao path
   }
   else
   {                               //
     i++;                          // pedido da taks seguinte para teste
-    return actualRecurseOne(j, i, task); // soma de +0 ao result caso não se adicione uma task ao path
+    return actualRecurseOne(j, i, task,num_tasks); // soma de +0 ao result caso não se adicione uma task ao path
   }                               //
 } //
   //
@@ -304,7 +304,7 @@ int recurseOne(problem_t *problem)
   {                                            // iteração pelas tasks iniciais (nº de tasks)
     printf("Working for: %d\n", p);            // print da task k atualmente se começou (debugg)
     printf("Atual i = %d\n", p);               // print da task inicial (debugg)
-    int result = actualRecurseOne(p, 0, problem->task);  // result = iniciação de recur começado em p
+    int result = actualRecurseOne(p, 0, problem->task, problem->T);  // result = iniciação de recur começado em p
     printf("Number of tasks: %d\n\n", result); // print do numero de tasks num path (debugg)
   }                                            //
   return 0;                                    //
