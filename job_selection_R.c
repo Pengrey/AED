@@ -289,8 +289,8 @@ int actualRecurseOne(int j, int i, /*int arr[][3]*/ task_t *task, int num_tasks,
     printf("DEBUG:j= %d, path %d tmp_i= %d",j,tmp[0],tmp_i);
 
 
-    j = besti; 
-    tmp[tmp_i]=j; 
+    j = besti;
+    tmp[tmp_i]=j;
     tmp_i++;
     printf("Atual j = %d\n", j); // print da task atualmente a ser avaliada (debugg)
     prev = task[j].ending_date;  // prev fica com o valor da data final da task a ser avaliada
@@ -318,7 +318,7 @@ int recurseOne(problem_t *problem)
   {
     k = problem->T;
   }
-  
+
   for (int p = 0; p < problem->T; p++)
   {                                                                                // iteração pelas tasks iniciais (nº de tasks)
     int tmp[k];
@@ -334,15 +334,15 @@ int recurseOne(problem_t *problem)
       printf("tmp = %d\n",path[p][abc]);
 
     }
-  }    
+  }
  for(int i=0;i<problem->T;i++){
     printf("Number of tasks: %d\n",path[i][0]);
-    
+
     for(int j=1;j<path[i][0];j++){
       printf("Elements: %d\n",path[i][j]);
     }
-    
-  }     
+
+  }
   return 0; //
 }
 

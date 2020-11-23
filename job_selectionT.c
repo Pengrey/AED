@@ -314,8 +314,100 @@ void init_problem(int NMec,int T,int P,int ignore_profit,problem_t *problem)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// problem solution (place your solution here)
+// problem solution (place your solution here) recurse1
 //
+int actualRecurseOne(int j, int i, /*int arr[][3]*/ task_t *task, int num_tasks, int tmp[], int tmp_i)
+{                             //i - task a ser trabalhada agora (nº da task) / j- ultima task que foi aceite
+  static int prev;            //
+  prev = task[j].ending_date; // prev = valor do tempo final da task previamente -- arr[j][2] transformsinto task[j].ending_date
+  if (i > num_tasks)
+  {                                       // caso terminal, ao fim do array task acabar recur  NOTAS: 0--starting_date  | 1--ending_date
+    return 1;                             //
+  }                                       //
+  if (prev < task[i].starting_date)       //  arr[i][0]
+  {                                       // caso a task a ser avaliada tenha uma data de começo superior à data final da ultima task do nosso path
+    int besti = i;                        // define best case do i para que seja um tempo de finalização curto
+    int next = task[i + 1].starting_date; // define next como o próximo no array das tasks para verificar se possuem a mesma starting date
+    while (task[i].starting_date == next)
+    {                                                    // while de verificação se o próximo possui mesma starting date
+      i++;                                               // incremento do i
+      next = task[i + 1].starting_date;                  // defenir next como o próximo elemento a avaliar arr[i + 1][0] transformsinto  task[i+1].starting_date
+      if (task[besti].ending_date > task[i].ending_date) // [besti][2] transformedinto task[besti].ending_date
+      {                                                  // caso o i tenha um valor final inferior escolher esse como preferência
+        besti = i;                                       // definir o i preferivel
+      }                                                  //
+    }
+
+    printf("DEBUG:j= %d, path %d tmp_i= %d",j,tmp[0],tmp_i);
+
+
+    j = besti;
+    tmp[tmp_i]=j;
+    tmp_i++;
+    printf("Atual j = %d\n", j); // print da task atualmente a ser avaliada (debugg)
+    prev = task[j].ending_date;  // prev fica com o valor da data final da task a ser avaliada
+    i++;
+    // adicionar +1 a i para testar a task seguinte
+    tmp_i++;
+
+    return 1 + actualRecurseOne(j, i, task, num_tasks, tmp, tmp_i); // soma de +1 ao result caso se adicione uma task ao path
+  }
+  else
+  {                                                                    //
+    i++;                                                               // pedido da taks seguinte para teste
+    return 0 + actualRecurseOne(j, i, task, num_tasks, tmp, tmp_i); // soma de +0 ao result caso não se adicione uma task ao path
+  }                                                                    //
+} //
+//
+int recurseOne(problem_t *problem)
+{                                      // algoritmo para teste de tmp
+   int path[problem->T + 1][MAX_T / 2]; // o 1o elemento do array e o numero de elementos nele
+  int k;
+  if(problem->T%2!=0){
+    k = problem->T+1;
+  }
+  else
+  {
+    k = problem->T;
+  }
+
+  for (int p = 0; p < problem->T; p++)
+  {                                                                                // iteração pelas tasks iniciais (nº de tasks)
+    int tmp[k];
+    printf("Working for: %d\n", p);                                                // print da task k atualmente se começou (debugg)
+    printf("Atual i = %d\n", p);                                                   // print da task inicial (debugg)
+    int result = actualRecurseOne(p, 0, problem->task, problem->T, tmp, 1);    // result = iniciação de recur começado em p
+    tmp[0]=p;
+    printf("Number of tasks: %d\n\n", result);                                     // print do numero de tasks num path (debugg)
+    path[p][0]=result;
+    for(int abc=0;abc<result;abc++){
+      printf("tmp = %d\n",tmp[abc]);
+      path[p][abc]=tmp[abc];
+      printf("tmp = %d\n",path[p][abc]);
+
+    }
+  }
+ for(int i=0;i<problem->T;i++){
+    printf("Number of tasks: %d\n",path[i][0]);
+
+    for(int j=1;j<path[i][0];j++){
+      printf("Elements: %d\n",path[i][j]);
+    }
+
+  }
+  return 0;
+}
+
+// Definir casos testes e chamada
+#if 0
+int main()
+{
+  int k = 1; //  0       1       2       3       4       5       6       7       8
+  int tasks[9][3] = {{1, k, 2}, {1, k, 3}, {2, k, 3}, {2, k, 4}, {4, k, 6}, {4, k, 5}, {6, k, 8}, {7, k, 8}, {9, k, 10}};
+  algo(tasks);
+  return 0;
+}
+#endif
 
 #if 1
 
@@ -351,6 +443,8 @@ static void solve(problem_t *problem)
   problem->biggestP = 0;
   problem->casos = 0;
     // call your (recursive?) function to solve the problem here
+  if(problem->P == 1 && problem->I == 1)
+    recurseOne(problem);
   recurse(problem,0);
   for(int t = 0; t < problem->T; t++)
   {
