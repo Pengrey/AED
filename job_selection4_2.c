@@ -56,7 +56,7 @@
 #include "../P02/elapsed_time.h"
 #include <string.h>
 
-#define pBusy printf("{%d, %d, %d, %d, %d, %d, %d, %d, %d, %d}\n",p->busy[0], p->busy[1], p->busy[2], p->busy[3], p->busy[4], p->busy[5], p->busy[6], p->busy[7], p->busy[8], p->busy[9]);
+#define pBusy printf("{%d, %d, %d, %d, %d, %d, %d, %d, %d, %d}\n",problem->busy[0], problem->busy[1], problem->busy[2], problem->busy[3], problem->busy[4], problem->busy[5], problem->busy[6], problem->busy[7], problem->busy[8], problem->busy[9]);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -124,153 +124,63 @@ typedef struct
 }
 problem_t;
 
-#if 0
-      tipo eu penso assim sempre que chamo recursao alteramos a estrutura de dados entao eu criei 3 saves e outra entrada no problem_t para guardar a ultima ending date que o programador esteve a fazer que tambem guardo
-        uso memcpy para copiar arrays
-      antes de chamar salvo depois de acabar restauro    mas antes de restaurar eu corro
-        if( t_profit > p->biggest_profit){
-          p->biggest_profit = t_profit;
-          for(int j = 0; j < p->T; j++){
-            tasksp[j].best_assigned_to = tasksp[j].assigned_to;
-          }//end for
-        }  // end if profit e not assign
- que muda algumas cenas caso a solucao que a recursao deu origina uma melhor solucao
-
- mas nao funcion : (
-
-  entao o seguinte esta a acontecer ::
-
-  a funcao considera 0 no prog 0
-  considera 1 no prog 1
-  depois tenta a task 2 que nao da
-  mas nao considera nao mete la
-  pronto nos temos * (COMUNISM) que arranjar maneira de  fazer este raciocionio para as task que se sobrepoe como neste caso a task 2
-hmm
-temos a task 0 no programador 0 ate dia 12 e a task 1 no programador 1 ate dia 23 e entao nao podemos incluir a task 2 nem no 0 nem no 1 : | wait then
-
-#endif
-/////////////////////////////////////////////////////////////////////////
-//
-//    Profit goes brr
-//
-/////////////////////////////////////////////////////////////////////////
-
-int ProfitCalc(problem_t *p ){
-  int t_profit = p->total_profit; // life quality changes
-  task_t *tasksp = p->task;       // life quality changes
-  if( t_profit > p->biggest_profit){
-    p->biggest_profit = t_profit;
-    for(int j = 0; j < p->T; j++){
-      tasksp[j].best_assigned_to = tasksp[j].assigned_to;
-    } //end for
-  }   // end if profit e not assign
-  printf("profit Calc  %d\n",t_profit);
-  return t_profit;
-}
-
-//////////////////////////////////////////////////////////////////////
-//
+////////////////////////7777777777777777777777777777777777777777777777
 // recursEE
 //
-//////////////////////////////////////////////////////////////////////
-int recurse(problem_t *p , int t) { // p e o pointer para o a coisa do problema t e o indice de tasks
-
-  pBusy;
-  int *busy = p->busy;      // array verdadeiro de busy
-
-  // array que guarda o estado dos programadores do problem_t antes de "sofrer recursao"
-  int busy_save[MAX_P];
-
-  int *last_busy = p->lastBusy;      // array verdadeiro de last_busy mais uma merda que tenho de guardar de salto para salto
-
-  int last_busy_save[MAX_P];           //save de last busy
-
-  int biggest_profit = p->biggest_profit; // life quality changes
-
-  int t_profit = p->total_profit; // life quality changes
-  int t_profit_save; // life quality changes
-  task_t *tasksp = p->task;       // life quality changes
-
-  // array que guarda o estado de atribuição das tasks do problem_t antes de "sofrer recursao"
+int recurse(problem_t *problem , int t) {
   task_t task_save[MAX_T];
-
-  //caso terminal every solution is viable mas repetem
-  if ( t >= p->T){
-    p->nAlt++;
-    return 1;
-  }
-  for( int i = 0; i < p->P; i++){
-
- // Verificar se o programador i esta disponivel para fazer a task t
-    if(busy[i] < (tasksp[t].starting_date)){
-//summary
- // Verificar se a task t esta disponivel
-      if(tasksp[t].assigned_to < 0){
-        puts("Parte de considerar");
-        // incluir a task t
-        last_busy[i] = busy[i];
-        busy[i] = tasksp[t].ending_date;
-        t_profit = t_profit + tasksp[t].profit;
-        tasksp[t].assigned_to = i;
-
-        // guarda o que os programadores estavam a fazer antes da funcao recursiva ser chamada
-        memcpy(&busy_save, busy, MAX_P);
-        // guarda o que os programadores estavam a fazer antes da funcao recursiva ser chamada
-        memcpy(&task_save, tasksp, MAX_T);
-        // guarda o que os programadores estavam a fazer antes da funcao recursiva ser chamada
-        memcpy(&last_busy_save, last_busy, MAX_P);
-        printf("Profit sem recurse %d\n", t_profit);
-        if(!recurse(p,++t)){ //caso a task nao possa ser considerada dai o not recurse
-          recurse(p,++t);   // nao e preciso nem restaurar nem guardar porque a partida a unica maneira de entrar aqui e
-        }                   //se fizer return de 0 que por sua vez so acontece se nao fizer nada
-        biggest_profit = ProfitCalc(p); // calcular o best profit com uma funcao
-        printf("Profit com recurse %d\n", t_profit);
-
-        puts("Parte de nao considerar");
-        puts("pBusy n restaured");
-        pBusy;
-        // restaura o que os programadores estavam a fazer antes da funcao recursiva ser chamada
-        memcpy(busy, &busy_save, MAX_P);
-        // restaura o que os programadores estavam a fazer antes da funcao recursiva ser chamada
-        memcpy(tasksp, &task_save, MAX_T);
-        memcpy(last_busy, &last_busy_save, MAX_P);
-        puts("pBusy restaured");
-        pBusy;
-        // não incluir a task j
-        // temos que na mesma "desocupar o programador i"
-        busy[i] = last_busy[i];  //pois
-        t_profit -= tasksp[t].profit;
-        tasksp[t].assigned_to = -1;
-
-        // guarda o que os programadores estavam a fazer antes da funcao recursiva ser chamada
-        memcpy(&busy_save, busy, MAX_P);
-        // guarda o que os programadores estavam a fazer antes da funcao recursiva ser chamada
-        memcpy(&task_save, tasksp, MAX_T);
-        // guarda o que os programadores estavam a fazer antes da funcao recursiva ser chamada
-        memcpy(&last_busy_save, last_busy, MAX_P);
-
-        printf("Profit sem recurse %d\n", t_profit);
-        if(!recurse(p,++t)){
-          recurse(p,++t);// calcular o best profit com uma funcao
+  int busy_save[MAX_P];
+  int t_profit;
+  if( t > problem->T)
+    return 0;
+  for( int p = 0; p<problem->P;p++)
+    if(problem->busy[p] < problem->task[t].starting_date)
+      {
+        if(problem->task[t].assigned_to<0)
+        {
+          memcpy(&busy_save,problem->busy,MAX_P);
+          memcpy(&task_save,problem->task,MAX_T);
+          t_profit = problem->total_profit;
+          problem->busy[p] = problem->task[t].ending_date;
+          problem->task[t].assigned_to = p;
+          problem->total_profit += problem->task[t].profit;
+          for(int k = t+1; k < problem->T;k++)
+          {
+            if( recurse(problem, k) )
+              recurse(problem,k);
+            if( problem->total_profit > problem->biggest_profit )
+            {
+              problem->biggest_profit = problem->total_profit;
+              for(int l = 0; l < problem->T; l++)
+                problem->task[l].best_assigned_to = problem->task[l].assigned_to;
+              printf("Profit Calc = %d\n",problem->total_profit);
+              puts(")");
+            }
+            pBusy;
+            printf("Profit So Far = %d, task = %d\n",problem->total_profit,t);
+          }
+          problem->total_profit= t_profit ;
+          for(int j = t+1; j < problem->T;j++)
+          {
+            if( recurse(problem, j) )
+              recurse(problem,j);
+            pBusy;
+            if( problem->total_profit > problem->biggest_profit )
+            {
+              problem->biggest_profit = problem->total_profit;
+              for(int l = 0; l < problem->T; l++)
+                problem->task[l].best_assigned_to = problem->task[l].assigned_to;
+              printf("Profit Calc = %d\n",problem->total_profit);
+            }
+            problem->total_profit= t_profit;
+            printf("Profit So Far = %d, task = %d\n",problem->total_profit,t);
+            memcpy(problem->busy,&busy_save,MAX_P);
+            memcpy(problem->task,&task_save,MAX_T);
+          }
         }
-        biggest_profit = ProfitCalc(p);
-        printf("Profit com recurse %d\n", t_profit);
-        // restaura o que os programadores estavam a fazer antes da funcao recursiva ser chamada
-        memcpy(busy, &busy_save, MAX_P);
-        // restaura o que os programadores estavam a fazer antes da funcao recursiva ser chamada
-        memcpy(tasksp, &task_save, MAX_T);
-        memcpy(last_busy, &last_busy_save, MAX_P);
-
-
-
-     }
-    }        // end if starting date
-   }          //end for loop
-  return 0;
-}// function end
-//nao devia haver problema chgar ali porque se se guarda os estados antes e restora-se a seguir e chama-se a funcao considerando e nao considerando a task t
-// mas quando chega a task T-1 acaba e nao devia ou devia, podes nao ter metido as anteriores mas tambem nao as queres meter pois nao ???
-// how to use goto
+      }
+  return 1;
+}
 
 int compare_tasks(const void *t1,const void *t2)
 {
@@ -441,8 +351,6 @@ static void solve(problem_t *problem)
     fprintf(stderr,"Unable to create file %s (maybe it already exists? If so, delete it!)\n",problem->file_name);
     exit(1);
   }
-  problem->nAlt = 0;
-  problem->biggest_profit = 0;
   problem->total_profit = 0;
   for(int t = 0; t < problem->T; t++){
     problem->task[t].assigned_to = -1;
@@ -461,7 +369,7 @@ static void solve(problem_t *problem)
     // call your (recursive?) function to solve the problem here
   problem->cpu_time = cpu_time() - problem->cpu_time;
   for(int f = 0; f < problem->T; f++)
-    printf("Best Assigned To ->  %d\n",problem->task[f].best_assigned_to);
+    printf("f =  %d Best Assigned To ->  %d\n",f,problem->task[f].best_assigned_to);
   printf(" Best profit -> %d \n",problem->biggest_profit);
   //
   // save solution data
