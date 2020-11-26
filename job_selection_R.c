@@ -305,11 +305,11 @@ int actualRecurseOne(int j, int i, /*int arr[][3]*/ task_t *task, int num_tasks,
     i++;                                                               // pedido da taks seguinte para teste
     return 0 + actualRecurseOne(j, i, task, num_tasks, tmp, tmp_i); // soma de +0 ao result caso não se adicione uma task ao path
   }                                                                    //
-} //
+} 
 //
 int recurseOne(problem_t *problem)
 {                                      // algoritmo para teste de tmp
-   int path[problem->T + 1][MAX_T / 2]; // o 1o elemento do array e o numero de elementos nele
+  int path[problem->T + 1][MAX_T / 2]; // o 1o elemento do array e o numero de elementos nele
   int k;
   if(problem->T%2!=0){
     k = problem->T+1;
@@ -322,17 +322,28 @@ int recurseOne(problem_t *problem)
   for (int p = 0; p < problem->T; p++)
   {                                                                                // iteração pelas tasks iniciais (nº de tasks)
     int tmp[k];
+    printf("DEBUG: SIZE OF TMP K %ld",sizeof(tmp[k])); //just checking, is 4byte
+
+
+
     printf("Working for: %d\n", p);                                                // print da task k atualmente se começou (debugg)
     printf("Atual i = %d\n", p);                                                   // print da task inicial (debugg)
-    int result = actualRecurseOne(p, 0, problem->task, problem->T, tmp, 1);    // result = iniciação de recur começado em p
+
+
+    int result = actualRecurseOne(p, 0, problem->task, problem->T, tmp, 1);        // result = iniciação de recur começado em p
+
+    
     tmp[0]=p;
+
     printf("Number of tasks: %d\n\n", result);                                     // print do numero de tasks num path (debugg)
     path[p][0]=result;
+
+
     for(int abc=0;abc<result;abc++){
       printf("tmp = %d\n",tmp[abc]);
       path[p][abc]=tmp[abc];
       printf("tmp = %d\n",path[p][abc]);
-
+      printf("Path = %d\n",path[p][abc]);
     }
   }    
  for(int i=0;i<problem->T;i++){
