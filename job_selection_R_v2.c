@@ -55,7 +55,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "../../../P02/elapsed_time.h"
+#include "../P02/elapsed_time.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -304,21 +304,21 @@ int actualRecurseOne(int j, int i, /*int arr[][3]*/ task_t *task, int num_tasks,
     prev = task[j].ending_date;                          // prev fica com o valor da data final da task a ser avaliada
 
 
-    path->pathArray[i] = j;    
+    path->pathArray[i] = j;
     printf("DEBUG: j= %d ; pathArray[i]= %d\n previous one %d\n",j,path->pathArray[i],path->pathArray[i+1]);
-    
+
     path->path_length++;
     printf("BIG DEBUG: ADDED ONE TO PATH_LENGHT. PATH LENGTH NOW %d\n",path->path_length);
 
 
     i++;                                                      // adicionar +1 a i para testar a task seguinte
-    
-    return 1 + actualRecurseOne(j, i, task, num_tasks, &path); // soma de +1 ao result caso se adicione uma task ao path
+
+    return 1 + actualRecurseOne(j, i, task, num_tasks, path); // soma de +1 ao result caso se adicione uma task ao path
   }
   else
   {                                                           //
     i++;                                                      // pedido da taks seguinte para teste
-    return 0 + actualRecurseOne(j, i, task, num_tasks, &path); // soma de +0 ao result caso não se adicione uma task ao path
+    return 0 + actualRecurseOne(j, i, task, num_tasks, path); // soma de +0 ao result caso não se adicione uma task ao path
   }                                                           //
 } //
 //
@@ -366,7 +366,7 @@ static void solve(problem_t *problem)
     path_t* fuckpointers2 = &(problem->path[i]);
      //for debug purposes :)
      printf("BIG DEBUG: %d\n and %d\n",fuckpointers2->path_length,fuckpointers2->pathArray[1]);
-     
+
       printf("{");
       for(int k=0; k<fuckpointers2->path_length;k++)
       {
@@ -375,7 +375,7 @@ static void solve(problem_t *problem)
       printf(" }\n");
   }
 
-  
+
   // save solution data
   //
   fprintf(fp, "NMec = %d\n", problem->NMec);
