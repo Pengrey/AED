@@ -1,0 +1,13 @@
+0	0
+1	1
+R NMec = 2020
+T = 2
+P = 3
+Biggest P = 6564
+Casos  viaveis= 4
+Profits not ignored
+Solution time = 1.304e-05
+Task data
+    1  22  1987
+    1  27  4577
+End
