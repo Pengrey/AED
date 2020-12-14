@@ -3,8 +3,8 @@
 % Tabela de tasks
 
 clear all
-str = convertStringsToChars(splitlines(extractFileText('tasks_35_04_0.txt')));
-profits = str2double(splitlines(extractFileText('profits_35_04_0.txt')));
+str = convertStringsToChars(splitlines(extractFileText('tasks_30_06_0.txt')));
+profits = str2double(splitlines(extractFileText('profits_30_06_0.txt')));
 progs={};
 prog={};
 tasks={};
@@ -41,9 +41,11 @@ for  i= 1:final
             txt = title;
             avg =(t(1)+(t(end)-t(1))/2)-0.3;
         end
-        text(avg,i+margem,txt);
+        text(avg,i+margem,txt,'Color','k');
         prog{i} = char(progs{i}(1));
-        plot(t, i*p, 'k-|',"LineWidth",5);
+        plot(t, i*p, 'k-',"LineWidth",3);
+        plot(t(1),i*p, 'k*',"LineWidth",3);
+        plot(t(end),i*p, 'k*',"LineWidth",3)
     end   
 end
 
@@ -60,8 +62,10 @@ for q=1:length(tasks)
         txt = title;
         avg =(t(1)+(t(end)-t(1))/2)-0.3;
     end
-    text(avg,((q+final)+margem),txt);
-    plot(t, (q+final)*p, 'r-|',"LineWidth",5);
+    text(avg,((q+final)+margem),txt,'Color','r');
+    plot(t, (q+final)*p, 'r-',"LineWidth",3);
+    plot(t(1),(q+final)*p, 'r*',"LineWidth",3);
+    plot(t(end),(q+final)*p, 'r*',"LineWidth",3)
     prog{q+final} = char('');
 end
 hold off
@@ -70,4 +74,36 @@ ay = gca;
 ay.YTickLabel = prog;
 yticks(1:length(prog));
 %%
-% Results
+% Results profits
+
+clear all
+results = load('profitfilename1.txt');
+tasks=results(:,1);
+progs=results(:,2);
+profit=results(:,3);
+profits= zeros(64,10);
+for i=1:length(profit)
+        profits(tasks(i),progs(i))=profit(i);
+end
+mesh(profits);
+title("Max Profits")
+xlabel("Number of Tasks");
+ylabel("Number of Programmers");
+zlabel("Maximum Profits");
+%%
+% Results time
+
+clear all
+results = load('profitfilename1.txt');
+tasks=results(:,1);
+progs=results(:,2);
+time=results(:,3);
+times= zeros(64,10);
+for i=1:length(time)
+        times(tasks(i),progs(i))=time(i);
+end
+mesh(times);
+title("Execution Time")
+xlabel("Number of Tasks");
+ylabel("Number of Programmers");
+zlabel("Execution Times");
