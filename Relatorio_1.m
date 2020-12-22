@@ -3,8 +3,8 @@
 % Tabela de tasks
 
 clear all
-str = convertStringsToChars(splitlines(extractFileText('tasks_30_06_0.txt')));
-profits = str2double(splitlines(extractFileText('profits_30_06_0.txt')));
+str = convertStringsToChars(splitlines(extractFileText('casks_35_04_1.txt')));
+profits = str2double(splitlines(extractFileText('profits_35_04_1.txt')));
 progs={};
 prog={};
 tasks={};
@@ -69,10 +69,11 @@ for q=1:length(tasks)
     prog{q+final} = char('');
 end
 hold off
-grid;
+grid("minor");
 ay = gca;
 ay.YTickLabel = prog;
 yticks(1:length(prog));
+axis(ay,"tight");
 %%
 % Results profits
 
@@ -94,7 +95,7 @@ zlabel("Maximum Profits");
 % Results time
 
 clear all
-results = load('profitfilename1.txt');
+results = load('execution0.txt');
 tasks=results(:,1);
 progs=results(:,2);
 time=results(:,3);
