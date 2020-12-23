@@ -1,61 +1,10 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// AED, 2020/2021
-//
-// TODO: place the student number and name here
-// TODO: place the student number and name here (if applicable)
-// TODO: place the student number and name here (if applicable)
-//
-// Brute-force solution of the generalized weighted job selection problem
-//
-// Compile with "cc -Wall -O2 job_selection.c -lm" or equivalent
-//
-// In the generalized weighted job selection problem we will solve here we have T programming tasks and P programmers.
-// Each programming task has a starting date (an integer), an ending date (another integer), and a profit (yet another
-// integer). Each programming task can be either left undone or it can be done by a single programmer. At any given
-// date each programmer can be either idle or it can be working on a programming task. The goal is to select the
-// programming tasks that generate the largest profit.
-//
-// Things to do:
-//   0. (mandatory)
-//      Place the student numbers and names at the top of this file.
-//   1. (highly recommended)
-//      Read and understand this code.
-//   2. (mandatory)
-//      Solve the problem for each student number of the group and for
-//        N=1, 2, ..., as higher as you can get and
-//        P=1, 2, ... min(8,N)
-//      Present the best profits in a table (one table per student number).
-//      Present all execution times in a graph (use a different color for the times of each student number).
-//      Draw the solutions for the highest N you were able to do.
-//   3. (optional)
-//      Ignore the profits (or, what is the same, make all profits equal); what is the largest number of programming
-//      tasks that can be done?
-//   4. (optional)
-//      Count the number of valid task assignments. Calculate and display an histogram of the number of occurrences of
-//      each total profit. Does it follow approximately a normal distribution?
-//   5. (optional)
-//      Try to improve the execution time of the program (use the branch-and-bound technique).
-//      Can you use divide and conquer to solve this problem?
-//      Can you use dynamic programming to solve this problem?
-//   6. (optional)
-//      For each problem size, and each student number of the group, generate one million (or more!) valid random
-//      assignments and compute the best solution found in this way. Compare these solutions with the ones found in
-//      item 2.
-//   7. (optional)
-//      Surprise us, by doing something more!
-//   8. (mandatory)
-//      Write a report explaining what you did. Do not forget to put all your code in an appendix.
-
-//   9. Resolver problema de ob_selection sem ser generalizada
-//
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "../P02/elapsed_time.h"
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -73,8 +22,10 @@ int rng_main() __attribute__((__unused__));   // gcc will not complain if rnd_ma
 #endif
 #include "rng.c"
 #undef main                                   // main becomes main again
+
 #define srandom(seed)  ran_start((long)seed)  // start the pseudo-random number generator
 #define random()       ran_arr_next()         // get the next pseudo-random number (0 to 2^30-1)
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -103,148 +54,20 @@ task_t;
 
 typedef struct
 {
-  int path_length;      // I numero de elementos no array
-  int pathArray[MAX_T]; // S? the size of this array will is the problem T_T
-} path_t;
-typedef struct
-{
   int NMec;               // I  student number
   int T;                  // I  number of tasks
   int P;                  // I  number of programmers
   int I;                  // I  if 1, ignore profits
+  int casos;                  // I  if 1, ignore profits
   int total_profit;       // S  current total profit
-  int biggestP;       // S  current total profit
+  int biggest_profit;       // S  current total profit
   double cpu_time;        // S  time it took to find the solution
   task_t task[MAX_T];     // IS task data
   int busy[MAX_P];        // S  for each programmer, record until when she/he is busy (-1 means idle)
   char dir_name[16];      // I  directory name where the solution file will be created
   char file_name[64];     // I  file name where the solution data will be stored
-  int casos;
-  path_t path[MAX_T]; //NÃO GOSTO DE USAR MAX_T AQUI, SÓ SERIA NECESSÁRIO USAR T!!
 }
 problem_t;
-//////////////////////////////////////////////////////////////
-//
-//  Recurse<->
-//
-int recurse(problem_t *prob,int t)
-{
-
-  int busy_save;
-  int profit_save;
-  int task_save;
-  if(t >= prob->T)
-  {
-    prob->casos++;
-    if(prob->total_profit > prob->biggestP)
-    {
-      prob->biggestP = prob->total_profit;
-      for(int j = 0 ; j < prob->T; j++)
-      {
-        prob->task[j].best_assigned_to = prob->task[j].assigned_to;
-      }
-    }
-    return 1;
-  }
-  recurse(prob, t + 1);
-  for(int p = 0; p < prob->P; p++)
-  {
-    if(prob->busy[p] < prob->task[t].starting_date)
-    {
-      if(prob->task[t].assigned_to < 0)
-      {
-        busy_save = prob->busy[p];
-        task_save = prob->task[t].assigned_to;
-        profit_save = prob->total_profit;
-
-        prob->busy[p]= prob->task[t].ending_date;
-        prob->task[t].assigned_to = p ;
-        prob->total_profit += prob->task[t].profit;
-        recurse(prob, t+1);
-        prob->busy[p]= busy_save ;
-        prob->task[t].assigned_to = task_save ;
-        prob->total_profit = profit_save;
-        return 1;
-      }
-    }
-  }
-  return 0;
-}
-////////////////////////////////////////////////////////////
-//
-//Recurse biggest length para 1 prog
-//
-int Recurse(problem_t *prob,int t)
-{
-  int busy_save;
-  int profit_save;
-  int task_save;
-  if(t >= prob->T)
-  {
-    prob->casos++;
-    if(prob->total_profit > prob->biggestP)
-    {
-      prob->biggestP = prob->total_profit;
-      for(int j = 0 ; j < prob->T; j++)
-      {
-        prob->task[j].best_assigned_to = prob->task[j].assigned_to;
-      }
-    }
-    return 1;
-  }
-  Recurse(prob, t + 1);
-  if(prob->busy[0] > prob->task[t].ending_date)
-  {
-    if(prob->task[t].assigned_to < 0)
-    {
-      busy_save = prob->busy[0];
-      task_save = prob->task[t].assigned_to;
-      profit_save = prob->total_profit;
-
-      prob->busy[0]= prob->task[t].ending_date;
-      prob->task[t].assigned_to = 0 ;
-      prob->total_profit += prob->task[t].profit;
-      Recurse(prob, t+1);
-      prob->busy[0]= busy_save ;
-      prob->task[t].assigned_to = task_save ;
-      prob->total_profit = profit_save;
-      return 1;
-    }
-  }
-  return 0;
-}
-////////////////////////////////////////////////////////////
-//
-//nonRecurse biggest length para 1 prog
-//
-int nonRecurse(problem_t *prob)
-{
-  prob->busy[0] = prob->task[0].ending_date + 1;
-  for(int t = 0; t < prob->T; t++)
-  {
-    if(prob->busy[0] > prob->task[t].ending_date)
-    {
-      if(prob->task[t].assigned_to < 0)
-      {
-        prob->busy[0]= prob->task[t].starting_date;
-        prob->task[t].assigned_to = 0 ;
-        prob->total_profit += prob->task[t].profit;
-      }
-    }
-  }
-  if(prob->total_profit > prob->biggestP)
-  {
-    prob->biggestP = prob->total_profit;
-    for(int j = 0 ; j < prob->T; j++)
-    {
-      prob->task[j].best_assigned_to = prob->task[j].assigned_to;
-    }
-  }
-  return 0;
-}
-
-
-
 int compare_tasks_E(const void *t1,const void *t2)
 {
   int d1,d2;
@@ -252,11 +75,11 @@ int compare_tasks_E(const void *t1,const void *t2)
   d1 = ((task_t *)t1)->ending_date;
   d2 = ((task_t *)t2)->ending_date;
   if(d1 != d2)
-    return (d1 > d2) ? -1 : +1;
-  d1 = ((task_t *)t1)->starting_date;
+    return (d1 < d2) ? -1 : +1;
   d2 = ((task_t *)t2)->starting_date;
+  d1 = ((task_t *)t1)->starting_date;
   if(d1 != d2)
-    return (d1 > d2) ? -1 : +1;
+    return (d1 < d2) ? -1 : +1;
   return 0;
 }
 
@@ -279,7 +102,6 @@ void init_problem(int NMec,int T,int P,int ignore_profit,problem_t *problem)
 {
   int i,r,scale,span,total_span;
   int *weight;
-
   //
   // input validation
   //
@@ -409,71 +231,96 @@ void init_problem(int NMec,int T,int P,int ignore_profit,problem_t *problem)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// problem solution (place your solution here)======================================================================
+// problem solution (place your solution here)
+//
 
+int recurse(problem_t *prob,int t)
+{
 
-
-int actualRecurseOne(int j, int i, /*int arr[][3]*/ task_t *task, int num_tasks, path_t *path)
-{ //i - task a ser trabalhada agora (nº da task) / j- ultima task que foi aceite
-
-  static int prev;
-  prev = task[j].ending_date; // prev = valor do tempo final da task previamente
-  if (i > num_tasks)
-  { // caso terminal, ao fim do array task acabar recur  NOTAS: 0--starting_date  | 1--ending_date
-    path->path_length++;
-    path->pathArray[i]=j;
+  int busy_save;
+  int profit_save;
+  int task_save;
+  if(t >= prob->T)
+  {
+    prob->casos++;
+    if(prob->total_profit > prob->biggest_profit)
+    {
+      prob->biggest_profit = prob->total_profit;
+      for(int j = 0; j < prob->T; j++)
+      {
+        prob->task[j].best_assigned_to = prob->task[j].assigned_to;
+      }
+    }
     return 1;
   }
-  if (prev < task[i].starting_date)       //  arr[i][0]
-  {                                       // caso a task a ser avaliada tenha uma data de começo superior à data final da ultima task do nosso path
-    int besti = i;                        // define best case do i para que seja um tempo de finalização curto
-    int next = task[i + 1].starting_date; // define next como o próximo no array das tasks para verificar se possuem a mesma starting date
-    while (task[i].starting_date == next)
-    {                                                    // while de verificação se o próximo possui mesma starting date
-      i++;                                               // incremento do i
-      next = task[i + 1].starting_date;                  // defenir next como o próximo elemento a avaliar
-      if (task[besti].ending_date > task[i].ending_date) // [besti][2] transformedinto task[besti].ending_date
-      {                                                  // caso o i tenha um valor final inferior escolher esse como preferência
-        besti = i;                                       // definir o i preferivel
-      }                                                  //
-    }                                                    //
-    j = besti;                                           //
-    printf("Atual i = %d\n", i);                         // print da task atualmente a ser avaliada (debugg)
-    prev = task[j].ending_date;                          // prev fica com o valor da data final da task a ser avaliada
 
+  recurse(prob, t + 1);
 
-    path->pathArray[i] = j;
-    printf("DEBUG: j= %d ; pathArray[i]= %d\n previous one %d\n",j,path->pathArray[i],path->pathArray[i+1]);
+  for(int p = 0; p < prob->P; p++)
+  {
+    if(prob->busy[p] < prob->task[t].starting_date)
+    {
+      if(prob->task[t].assigned_to < 0)
+      {
+        busy_save = prob->busy[p];
+        task_save = prob->task[t].assigned_to;
+        profit_save = prob->total_profit;
 
-    path->path_length++;
-    printf("BIG DEBUG: ADDED ONE TO PATH_LENGHT. PATH LENGTH NOW %d\n",path->path_length);
-
-
-    i++;                                                      // adicionar +1 a i para testar a task seguinte
-
-    return 1 + actualRecurseOne(j, i, task, num_tasks, path); // soma de +1 ao result caso se adicione uma task ao path
-  }
-  else
-  {                                                           //
-    i++;                                                      // pedido da taks seguinte para teste
-    return 0 + actualRecurseOne(j, i, task, num_tasks, path); // soma de +0 ao result caso não se adicione uma task ao path
-  }                                                           //
-} //
-//
-int recurseOne(problem_t *problem)
-{ // algoritmo para teste de paths
-  for (int p = 0; p < problem->T; p++)
-  {                                 // iteração pelas tasks iniciais (nº de tasks)
-    printf("Working for: %d\n", p); // print da task k atualmente se começou (debugg)
-    printf("Atual i = %d\n", p);    // print da task inicial (debugg)
-    path_t* fuckpointers = &(problem->path[p]);
-    int result = actualRecurseOne(p, 0, problem->task, problem->T, fuckpointers); // result = iniciação de recur começado em p
-    printf("BIG BIG DEBUG: %d\n",fuckpointers->path_length);
-    printf("Number of tasks: %d\n\n", result); // print do numero de tasks num path (debugg)
+        prob->busy[p]= prob->task[t].ending_date;
+        prob->task[t].assigned_to = p ;
+        prob->total_profit += prob->task[t].profit;
+        recurse(prob, t+1);
+        prob->busy[p]= busy_save ;
+        prob->task[t].assigned_to = task_save ;
+        prob->total_profit = profit_save;
+      }
+    }
   }
   return 0;
 }
-//
+
+
+#if 0
+int nonRec(problem_t *problem){
+#define TASK  problem->task[t]
+#define PROG  problem->busy[0]
+  int t = 0;
+  PROG = TASK.ending_date;
+  problem->biggest_profit+=TASK.profit;
+  TASK.best_assigned_to = 0;
+
+  for( t = 1; t < problem->T; t++){
+    if( TASK.starting_date > PROG )
+    {
+      PROG = TASK.ending_date;
+      problem->biggest_profit+=TASK.profit;
+      TASK.best_assigned_to = 0;
+    }
+  }
+#undef TASK
+#undef PROG
+  return 1;
+}
+#endif
+#if 1
+int nonRec(problem_t *problem, int programmer){
+#define TASK  problem->task[t]
+#define PROG  problem->busy[programmer]
+  int t = 0;
+
+  for( t = 0; t < problem->T; t++){
+    if( TASK.starting_date > PROG && TASK.best_assigned_to == -1 )
+    {
+      PROG = TASK.ending_date;
+      problem->biggest_profit+=TASK.profit;
+      TASK.best_assigned_to = programmer;
+    }
+  }
+#undef TASK
+#undef PROG
+  return 1;
+}
+#endif
 
 #if 1
 
@@ -485,8 +332,8 @@ static void solve(problem_t *problem)
   //
   // open log file
   //
-  (void)mkdir(problem->dir_name, S_IRUSR | S_IWUSR | S_IXUSR);
-  fp = fopen(problem->file_name, "w"); // add
+  (void)mkdir(problem->dir_name,S_IRUSR | S_IWUSR | S_IXUSR);
+  fp = fopen(problem->file_name,"w");
   if(fp == NULL)
   {
     fprintf(stderr,"Unable to create file %s (maybe it already exists? If so, delete it!)\n",problem->file_name);
@@ -496,41 +343,51 @@ static void solve(problem_t *problem)
   // solve
   //
   problem->cpu_time = cpu_time();
-
-  for(int p = 0; p < problem->P;p++)
+#define TASK  problem->task[t]
+  for(int t = 0; t < problem->T ; t++)
   {
-    problem->busy[p] = -1;
+    TASK.assigned_to = -1;
+    TASK.best_assigned_to= -1;
   }
-  for(int t = 0; t < problem->T; t++)
+#undef TASK
+#define PROG  problem->busy[p]
+  for(int p = 0; p < problem->P ; p++)
   {
-    problem->task[t].assigned_to = -1;
-    problem->task[t].best_assigned_to = -1;
+    PROG = -1;
   }
-  problem->total_profit = 0;
-  problem->biggestP = 0;
+#undef PROG
   problem->casos = 0;
-    // call your (recursive?) function to solve the problem here
-  if(problem->I == 1 && problem->P == 1)
+  problem->biggest_profit = 0;
+  problem->total_profit = 0;
+
+  qsort((void *)&problem->task[0],(size_t)problem->T,sizeof(problem->task[0]),compare_tasks);
+
+  if ( problem->I == 0 )
   {
+    puts("recurse");
+    recurse(problem, 0);
+  }
+  else
+  {
+    puts("nrecurse");
     qsort((void *)&problem->task[0],(size_t)problem->T,sizeof(problem->task[0]),compare_tasks_E);
-    Recurse(problem, 0);
+    for(int p = 0; p < problem->P; p++)
+      nonRec(problem, p);
   }
-  recurse(problem,0);
-
-
-  for(int t = 0; t < problem->T; t++)
-  {
-    printf("Best Assigned to da task %d, e no prog %d\n",t,problem->task[t].best_assigned_to);
-  }
-  printf("Biggest P = %d\n",problem->biggestP);
-  printf("Casos  viaveis= %d\n",problem->casos);
+    // call your (recursive?) function to solve the problem here
   problem->cpu_time = cpu_time() - problem->cpu_time;
-  printf("Solution time = %.3e\n",problem->cpu_time);
   //
   // save solution data
   //
-
-  fprintf(fp,"R NMec = %d\n",problem->NMec);
+#define TASK  problem->task[t]
+  for(int t = 0; t < problem->T; t++)
+  {
+    fprintf(fp,"P%d\t%d T%d %d \n",TASK.best_assigned_to,TASK.starting_date,t,TASK.ending_date);
+  }
+#undef TASK
+  fprintf(fp,"NMec = %d\n",problem->NMec);
+  fprintf(fp,"Viable Sol. = %d\n",problem->casos);
+  fprintf(fp,"Profit = %d\n",problem->biggest_profit);
   fprintf(fp,"T = %d\n",problem->T);
   fprintf(fp,"P = %d\n",problem->P);
   fprintf(fp,"Profits%s ignored\n",(problem->I == 0) ? " not" : "");
@@ -538,7 +395,7 @@ static void solve(problem_t *problem)
   fprintf(fp,"Task data\n");
 #define TASK  problem->task[i]
   for(i = 0;i < problem->T;i++)
-    fprintf(fp,"  %3d %3d %5d\n",TASK.starting_date,TASK.ending_date,TASK.profit);
+    fprintf(fp,"%02d  %3d %3d %5d\n",i,TASK.starting_date,TASK.ending_date,TASK.profit);
 #undef TASK
   fprintf(fp,"End\n");
   //
@@ -552,7 +409,6 @@ static void solve(problem_t *problem)
 }
 
 #endif
-
 
 
 
