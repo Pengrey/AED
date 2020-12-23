@@ -88,14 +88,14 @@ for i=1:length(profit)
 end
 mesh(profits);
 title("Max Profits")
-xlabel("Number of Tasks");
-ylabel("Number of Programmers");
+ylabel("Number of Tasks");
+xlabel("Number of Programmers");
 zlabel("Maximum Profits");
 %%
 % Results time
 
 clear all
-results = load('execution0.txt');
+results = load('execution1.txt');
 tasks=results(:,1);
 progs=results(:,2);
 time=results(:,3);
@@ -105,6 +105,107 @@ for i=1:length(time)
 end
 mesh(times);
 title("Execution Time")
-xlabel("Number of Tasks");
-ylabel("Number of Programmers");
+ylabel("Number of Tasks");
+xlabel("Number of Programmers");
 zlabel("Execution Times");
+%%
+% Results time (log)
+
+clear all
+results = load('execution1.txt');
+tasks=results(:,1);
+progs=results(:,2);
+time=results(:,3);
+times= zeros(64,10);
+for i=1:length(time)
+        times(tasks(i),progs(i))=log(time(i));
+end
+mesh(times);
+title("Execution Time (log)")
+ylabel("Number of Tasks");
+xlabel("Number of Programmers");
+zlabel("Execution Times");
+%%
+% Results time 2d (muda o numero de tasks)
+
+clear all
+prog=1;                                     % numero fixo de progs, mudar para o pretendido
+results = load('execution1.txt');
+tasks=results(:,1);
+progs=results(:,2);
+time=results(:,3);
+times= zeros(64,10);
+for i=1:length(time)
+        times(tasks(i),progs(i))=time(i);
+end
+result=times(:,prog);
+plot(result);
+grid("minor");
+title("Execution Time")
+xlabel("Number of Tasks");
+ylabel("Execution Times");
+ax=gca;
+axis(ax,"tight");
+%%
+% Results time 2d (log) (muda o numero de tasks)
+
+clear all
+prog=1;                                     % numero fixo de progs, mudar para o pretendido
+results = load('execution1.txt');
+tasks=results(:,1);
+progs=results(:,2);
+time=results(:,3);
+times= zeros(64,10);
+for i=1:length(time)
+        times(tasks(i),progs(i))=log(time(i));
+end
+result=times(:,prog);
+plot(result);
+grid("minor");
+title("Execution Time")
+xlabel("Number of Tasks");
+ylabel("Execution Times (log)");
+ax=gca;
+axis(ax,"tight");
+%%
+% Results time 2d (muda o numero de progs)
+
+clear all
+task=1;                                     % numero fixo de tasks, mudar para o pretendido
+results = load('execution1.txt');
+tasks=results(:,1);
+progs=results(:,2);
+time=results(:,3);
+times= zeros(64,10);
+for i=1:length(time)
+        times(tasks(i),progs(i))=time(i);
+end
+result=times(task,:);
+plot(result);
+grid("minor");
+title("Execution Time")
+xlabel("Number of Programmers");
+ylabel("Execution Times");
+ax=gca;
+axis(ax,"tight");
+%%
+% Results time 2d (log) (muda o numero de progs)
+
+clear all
+task=1;                                     % numero fixo de tasks, mudar para o pretendido
+results = load('execution1.txt');
+tasks=results(:,1);
+progs=results(:,2);
+time=results(:,3);
+times= zeros(64,10);
+for i=1:length(time)
+        times(tasks(i),progs(i))=log(time(i));
+end
+result=times(task,:);
+plot(result);
+grid("minor");
+title("Execution Time")
+xlabel("Number of Programmers");
+ylabel("Execution Times (Log)");
+ax=gca;
+axis(ax,"tight");
