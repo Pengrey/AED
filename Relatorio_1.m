@@ -129,7 +129,7 @@ zlabel("Execution Times");
 % Results time 2d (muda o numero de tasks)
 
 clear all
-prog=1;                                     % numero fixo de progs, mudar para o pretendido
+prog=10;                                     % numero fixo de progs, mudar para o pretendido
 results = load('execution1.txt');
 tasks=results(:,1);
 progs=results(:,2);
@@ -162,7 +162,7 @@ end
 result=times(:,prog);
 plot(result);
 grid("minor");
-title("Execution Time")
+title("Execution Time (log)")
 xlabel("Number of Tasks");
 ylabel("Execution Times (log)");
 ax=gca;
@@ -204,7 +204,7 @@ end
 result=times(task,:);
 plot(result);
 grid("minor");
-title("Execution Time")
+title("Execution Time (log)")
 xlabel("Number of Programmers");
 ylabel("Execution Times (Log)");
 ax=gca;
