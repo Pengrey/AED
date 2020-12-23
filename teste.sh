@@ -1,11 +1,19 @@
 #!/bin/bash
+
+######################################################
+#
+#   $1 -> nmec
+#   $2 -> profts
+#   $3 -> tempo que queres esperar
+#
+################################333333333333333333333
+
 mkdir -p $(printf "%06d" $1)
 for t in {1..64};do
   for p in {1..10};do
     if [[ !(-n  $( cat $(printf "%06d/%02d_%02d_%d.txt" $1 $t $p $3)) && -n $(grep "End" $(printf "%06d/%02d_%02d_%d.txt" $1 $t $p $3)) ) ]];then
-      echo "timeout $2 ./job_selection $1 $t $p 0"
-      time timeout $2 ./job_selection $1 $t $p 0 > /dev/null
-      [[ $? -gt 0 ]] && continue
+      echo "timeout $3 ./job_selection $1 $t $p $2"
+      timeout $3 ./job_selection $1 $t $p $2 > /dev/null
     fi
   done
 done
