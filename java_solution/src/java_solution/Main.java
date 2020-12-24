@@ -161,21 +161,21 @@ public class Main {
   //
   for(int t = 0; t < problem.T; t++)
   {
-    fpStream.write(String.format("P%d\t%d T%d %d \n",problem.task[t].getBest_assigned_to(),problem.task[t].getStarting_date(),t,problem.task[t].getEnding_date()));
+    System.out.println(String.format("P%d\t%d T%d %d \n",problem.task[t].getBest_assigned_to(),problem.task[t].getStarting_date(),t,problem.task[t].getEnding_date()));
   }
-  fpStream.write(String.format("NMec = %d\n",problem.getNMec()));
-  fpStream.write(String.format("Viable Sol. = %d\n",problem.getCasos()));
-  fpStream.write(String.format("Profit = %d\n",problem.getBiggestP()));
-  fpStream.write(String.format("T = %d\n",problem.getT()));
-  fpStream.write(String.format("P = %d\n",problem.getP()));
-  fpStream.write(String.format("Profits%s ignored\n",(problem.getI() == 0) ? " not" : ""));
-  fpStream.write(String.format("Solution time = %d\n",problem.getCpu_time()));
-  fpStream.write(String.format("Task data\n"));
+  System.out.println(String.format("NMec = %d\n",problem.getNMec()));
+  System.out.println(String.format("Viable Sol. = %d\n",problem.getCasos()));
+  System.out.println(String.format("Profit = %d\n",problem.getBiggestP()));
+  System.out.println(String.format("T = %d\n",problem.getT()));
+  System.out.println(String.format("P = %d\n",problem.getP()));
+  System.out.println(String.format("Profits%s ignored\n",(problem.getI() == 0) ? " not" : ""));
+  System.out.println(String.format("Solution time = %d\n",problem.getCpu_time()));
+  System.out.println(String.format("Task data\n"));
 
   for(int i = 0;i < problem.T;i++)
-    fpStream.write(String.format("%02d  %3d %3d %5d\n",i,problem.task[i].getStarting_date(),problem.task[i].getEnding_date(),problem.getTotal_profit()));
+    System.out.println(String.format("%02d  %3d %3d %5d\n",i,problem.task[i].getStarting_date(),problem.task[i].getEnding_date(),problem.getTotal_profit()));
 
-  fpStream.write(String.format("End\n"));
+  System.out.println(String.format("End\n"));
   //
   // terminate
   //
