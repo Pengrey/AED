@@ -107,6 +107,7 @@ public class Main {
 		  Arrays.sort(problem.task);
 	}
 	public static void solve(Problem_T problem) throws IOException {
+	System.out.println("solve");
   File current_path =  new File( System.getProperty("user.dir"));
   File fp = null;
   FileWriter fpStream = null;
@@ -132,7 +133,6 @@ public class Main {
   }
 
   for(int p = 0; p < problem.P ; p++)
-  {
     problem.prog[p].setBusy_until(-1);
   
 
@@ -183,7 +183,7 @@ public class Main {
   }
 
 
-	}
+	
 	private static int recurse(Problem_T prob, int t) {
 
 	  int busy_save;
