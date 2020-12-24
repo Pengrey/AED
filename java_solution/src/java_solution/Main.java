@@ -14,6 +14,11 @@ public class Main {
 
 	public static void main(String argv[]) {
 	  Problem_T problem = new Problem_T();
+	  for(int i = 0 ; i< MAX_T; i++)
+	  {
+	  	problem.task[i] = new Task();
+	  	if( i < MAX_P) problem.prog[i] = new Programador();
+	  }
 	  Integer NMec,T,P,I;
 	  int argc = argv.length;
 		NMec = (argc < 2) ? 2020 : Integer.parseInt(argv[0]) ;
@@ -51,7 +56,7 @@ public class Main {
 		  }
 		  total_span = (10 * T + P - 1) / P;
 		  if(total_span < 30)
-		  total_span = 30;
+        total_span = 30;
 		  final double sum2 = total_span - 1;
 		  int[] weight = new int[total_span + 1];
 		  scale = (int) Math.ceil((double) tail * 10.0 * sum2 / sum1);
@@ -59,13 +64,13 @@ public class Main {
 		  weight[0] = 0;
 		  weight[1] = 0;
 		  for(i = 2;i <= 10;i++)
-		  weight[i] = scale * (2 * i);
+        weight[i] = scale * (2 * i);
 		  for(i = 11;i <= 29;i++)
-		  weight[i] = scale * (30 - i);
+        weight[i] = scale * (30 - i);
 		  for(i = 30;i <= total_span;i++)
-		  weight[i] = tail;
+        weight[i] = tail;
 		  for(i = 1;i <= total_span;i++)
-		  weight[i] += weight[i - 1];
+        weight[i] += weight[i - 1];
 		  Random random = new Random();
 		  random.setSeed(nmec + 314161 * T + 271829 * P);
 		  problem.setNMec(nmec);
@@ -134,8 +139,8 @@ public class Main {
   problem.setCasos( 0);
   problem.setBiggestP(0);
   problem.setTotal_profit(0);
-
-  //qsort((void *)&problem.task[0],(size_t)problem.T,sizeof(problem.task[0]),compare_tasks);
+  
+  Arrays.sort(problem.task);
 
   if ( problem.I == 0 )
   {
@@ -145,7 +150,6 @@ public class Main {
   else
   {
     System.out.println("nrecurse");
-  //  qsort((void *)&problem.task[0],(size_t)problem.T,sizeof(problem.task[0]),compare_tasks_E);
     for(int g = 0; g < problem.P; g++)
       nonRec(problem, g);
   }
