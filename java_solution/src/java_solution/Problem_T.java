@@ -7,16 +7,28 @@ public class Problem_T {
   int I;                  // I  if 1, ignore profits
   int total_profit;       // S  current total profit
   int biggestP;       // S  current total profit
-  double cpu_time;        // S  time it took to find the solution
+  long cpu_time;        // S  time it took to find the solution
   Task[] task = new Task[64];     // IS task data
-  int[] busy = new int[64];        // S  for each programmer, record until when she/he is busy (-1 means idle)
+  Programador[] prog = new Programador[64];
 	String dir_name;      // I  directory name where the solution file will be created
   String file_name;     // I  file name where the solution data will be stored
   int casos;
   
   
   
-  public int getNMec() {
+  
+  public Problem_T() {
+		super();
+		NMec = -1;
+		T = -1;
+		P = -1;
+		I = -1;
+		this.total_profit = 0;
+		this.biggestP = 0;
+		this.cpu_time = 0;
+		this.casos = 0;
+	}
+	public int getNMec(){
 		return NMec;
 	}
 	public void setNMec(int nMec) {
@@ -46,16 +58,22 @@ public class Problem_T {
 	public void setTotal_profit(int total_profit) {
 		this.total_profit = total_profit;
 	}
+	public void sumTotal_profit(int total_profit) {
+		this.total_profit += total_profit;
+	}
+	public void sumBiggest_profit(int tp) {
+		this.biggestP += tp;
+	}
 	public int getBiggestP() {
 		return biggestP;
 	}
 	public void setBiggestP(int biggestP) {
 		this.biggestP = biggestP;
 	}
-	public double getCpu_time() {
+	public long getCpu_time() {
 		return cpu_time;
 	}
-	public void setCpu_time(double cpu_time) {
+	public void setCpu_time(long cpu_time) {
 		this.cpu_time = cpu_time;
 	}
 	public Task[] getTask() {
@@ -63,12 +81,6 @@ public class Problem_T {
 	}
 	public void setTask(Task[] task) {
 		this.task = task;
-	}
-	public int[] getBusy() {
-		return busy;
-	}
-	public void setBusy(int[] busy) {
-		this.busy = busy;
 	}
 	public String getDir_name() {
 		return dir_name;
@@ -84,6 +96,9 @@ public class Problem_T {
 	}
 	public int getCasos() {
 		return casos;
+	}
+	public void incCasos() {
+		this.casos = casos + 1;
 	}
 	public void setCasos(int casos) {
 		this.casos = casos;

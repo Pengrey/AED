@@ -1,6 +1,6 @@
 package java_solution;
 
-public class Task {
+public class Task implements Comparable<Task> {
 	private int starting_date;
 	private int ending_date;
 	private int profit;
@@ -17,6 +17,13 @@ public class Task {
 		this.bestAssignedTo = best_assigned_to;
 	}
 
+	public Task() {
+		this.starting_date = -1;
+		this.ending_date = -1;
+		this.profit = -1;
+		this.assigned_to = -1;
+		this.bestAssignedTo = -1;
+	}
 	
 	
 	
@@ -50,13 +57,14 @@ public class Task {
 	public void setProfit(int profit) {
 		this.profit = profit;
 	}
-	public int compareTo(Task t1,Task t2) {
-		int t1start = t1.getStarting_date();
+	@Override
+	public int compareTo(Task t2) {
+		int thisstart = this.getStarting_date();
 		int t2start = t2.getStarting_date();
-		if(t1start != t2start) return t1start < t2start ? -1 : 1;
-		int t1ending = t1.getEnding_date();
+		if(thisstart != t2start) return thisstart < t2start ? -1 : 1;
+		int thisending = this.getEnding_date();
 		int t2ending = t2.getEnding_date();
-		if(t1ending != t2ending) return t1ending < t2ending ? -1 : 1;
+		if(thisending != t2ending) return thisending < t2ending ? -1 : 1;
 		return 0;
 	}
 
