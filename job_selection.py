@@ -9,6 +9,69 @@ import operator
 MAX_T=64
 MAX_P=10
 
+# adaptado de https://www.geeksforgeeks.org/python-program-for-quicksort/
+def partition(arr, low, high):
+    i = (low-1)         # index of smaller element
+    pivot = arr[high]     # pivot
+ 
+    for j in range(low, high):
+ 
+        # If current element is smaller than or
+        # equal to pivot
+        if arr[j].starting_date <= pivot.starting_date:
+ 
+            # increment index of smaller element
+            i = i+1
+            arr[i], arr[j] = arr[j], arr[i]
+ 
+    arr[i+1], arr[high] = arr[high], arr[i+1]
+    return (i+1)
+
+def quickSort(arr, low, high):
+    if len(arr) == 1:
+        return arr
+    if low < high:
+ 
+        # pi is partitioning index, arr[p] is now
+        # at right place
+        pi = partition(arr, low, high)
+ 
+        # Separately sort elements before
+        # partition and after partition
+        quickSort(arr, low, pi-1)
+        quickSort(arr, pi+1, high)
+
+def partitionE(arr, low, high):
+    i = (low-1)         # index of smaller element
+    pivot = arr[high]     # pivot
+ 
+    for j in range(low, high):
+ 
+        # If current element is smaller than or
+        # equal to pivot
+        if arr[j].ending_date <= pivot.ending_date:
+ 
+            # increment index of smaller element
+            i = i+1
+            arr[i], arr[j] = arr[j], arr[i]
+ 
+    arr[i+1], arr[high] = arr[high], arr[i+1]
+    return (i+1)
+
+def quickSortE(arr, low, high):
+    if len(arr) == 1:
+        return arr
+    if low < high:
+ 
+        # pi is partitioning index, arr[p] is now
+        # at right place
+        pi = partitionE(arr, low, high)
+ 
+        # Separately sort elements before
+        # partition and after partition
+        quickSort(arr, low, pi-1)
+        quickSort(arr, pi+1, high)
+
 @dataclass
 class task_t:
     starting_date: int
@@ -23,6 +86,7 @@ class task_t:
         self.profit= -1
         self.assigned_to= -1
         self.best_assigned_to= -1
+    
 
 @dataclass
 class problem_t:
@@ -115,34 +179,34 @@ def init_problem(NMec,T,P,ignore_profit,problem):
         #
         # task starting an ending dates
         #
-        r = 1 + random.random() % weight[total_span] # 1 .. weight[total_span]
+        r = 1 + random.randint(0,2^30-1) % weight[total_span] # 1 .. weight[total_span]
         for span in range(0,total_span): 
             if(r <= weight[span]):
                 break
-        problem.task[i].starting_date = int(random.random() % (total_span - span + 1))
+        problem.task[i].starting_date = int(random.randint(0,2^30-1) % (total_span - span + 1))
         problem.task[i].ending_date = int(problem.task[i].starting_date + span - 1)
-    #
-    # task profit
-    #
-    # the task profit is given by r*task_span, where r is a random variable in the range 50..300 with a probability
-    #   density function with shape (two triangles, the area of the second is 4 times the area of the first)
-    #
-    #      *
-    #     /|   *
-    #    / |       *
-    #   /  |           *
-    #  *---*---------------*
-    # 50 100 150 200 250 300
-    #
-    scale = random.random() % 12501 # almost uniformly distributed in 0..12500 
-    if(scale <= 2500):
-        problem.task[i].profit = 1 + round(span * (50.0 + math.sqrt(scale)))
-    else:
-        problem.task[i].profit = 1 + round(span * (300.0 - 2.0 * math.sqrt(12500 - scale)))
+        #
+        # task profit
+        #
+        # the task profit is given by r*task_span, where r is a random variable in the range 50..300 with a probability
+        #   density function with shape (two triangles, the area of the second is 4 times the area of the first)
+        #
+        #      *
+        #     /|   *
+        #    / |       *
+        #   /  |           *
+        #  *---*---------------*
+        # 50 100 150 200 250 300
+        #
+        scale = random.randint(0,2^30-1) % 12501 # almost uniformly distributed in 0..12500 
+        if(scale <= 2500):
+            problem.task[i].profit = 1 + round(span * (50.0 + math.sqrt(scale)))
+        else:
+            problem.task[i].profit = 1 + round(span * (300.0 - 2.0 * math.sqrt(12500 - scale)))
     #
     # sort the tasks by the starting date
     #
-    sorted(problem.task, key=operator.attrgetter('starting_date'))
+    quickSort(problem.task,0,problem.T-1)
     #
     #finish
     #
@@ -226,13 +290,13 @@ def solve(problem):
     problem.biggest_profit = 0
     problem.total_profit = 0
     
-    sorted(problem.task,key=operator.attrgetter('starting_date'))
+    quickSort(problem.task,0,problem.T-1)
     if(problem.I == 0):
         fp.write("recurse\n")
         recurse(problem, 0)
     else:
         fp.write("nrecurse\n")
-        sorted(problem.task,key=operator.attrgetter('ending_date'))
+        quickSortE(problem.task,0,problem.T-1)
         for p in range(0,problem.P):
             nonRec(problem, p)
     problem.cpu_time = time.time() - problem.cpu_time      
@@ -247,9 +311,9 @@ def solve(problem):
     fp.write("T = {t:d}\n".format(t=problem.T))
     fp.write("P = {p:d}\n".format(p=problem.P))
     if(problem.I):
-        fp.write("Profits not ignored\n")   
+        fp.write("Profits ignored\n")   
     else:
-        fp.write("Profits ignored\n")
+        fp.write("Profits not ignored\n")
     fp.write("Solution time = {:3e}\n".format(problem.cpu_time))
     fp.write("Task data\n")
     for i in range(0,problem.T):    
