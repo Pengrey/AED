@@ -11,6 +11,12 @@ public class Programador {
   public void setBusy_until(int b){
     this.busy_until = b;
   }
+  public boolean canDo(int start_date) {
+  	return this.busy_until < start_date;
+  }
 
+  public boolean canDoNumberOfTasks(int start_date) {
+  	return start_date > this.busy_until ;
+  }
 
 }

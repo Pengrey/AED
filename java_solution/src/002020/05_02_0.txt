@@ -9,11 +9,11 @@ Profit = 6505
 T = 5
 P = 2
 Profits not ignored
-Solution time = 5.231e-05
+Solution time = 6.280e-04
 Task data
-00    6  12  1097
-01   10  23  2964
-02   11  20  2048
-03   17  26  2002
-04   24  27   442
+00    6  12     0
+01   10  23     0
+02   11  20     0
+03   17  26     0
+04   24  27     0
 End

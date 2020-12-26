@@ -59,6 +59,9 @@ public class Task implements Comparable<Task> {
 	}
 	@Override
 	public int compareTo(Task t2) {
+		return 0;
+	}
+	public int compare(Task t2) {
 		int thisstart = this.getStarting_date();
 		int t2start = t2.getStarting_date();
 		if(thisstart != t2start) return thisstart < t2start ? -1 : 1;
@@ -67,5 +70,11 @@ public class Task implements Comparable<Task> {
 		if(thisending != t2ending) return thisending < t2ending ? -1 : 1;
 		return 0;
 	}
+	public boolean isAvailable() {
+		return this.assigned_to < 0;
+		}
+	public boolean isAvailableNumberOfTasks() {
+		return this.bestAssignedTo < 0;
+		}
 
 }

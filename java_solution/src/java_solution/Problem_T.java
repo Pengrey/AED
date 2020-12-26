@@ -7,7 +7,7 @@ public class Problem_T {
   int I;                  // I  if 1, ignore profits
   int total_profit;       // S  current total profit
   int biggestP;       // S  current total profit
-  long cpu_time;        // S  time it took to find the solution
+  double cpu_time;        // S  time it took to find the solution
   Task[] task = new Task[64];     // IS task data
   Programador[] prog = new Programador[64];
 	String dir_name;      // I  directory name where the solution file will be created
@@ -70,10 +70,10 @@ public class Problem_T {
 	public void setBiggestP(int biggestP) {
 		this.biggestP = biggestP;
 	}
-	public long getCpu_time() {
+	public double getCpu_time() {
 		return cpu_time;
 	}
-	public void setCpu_time(long cpu_time) {
+	public void setCpu_time(double cpu_time) {
 		this.cpu_time = cpu_time;
 	}
 	public Task[] getTask() {
@@ -102,6 +102,9 @@ public class Problem_T {
 	}
 	public void setCasos(int casos) {
 		this.casos = casos;
+	}
+	public boolean isBetter() {
+		return this.total_profit > this.biggestP;
 	}
 	
 }
