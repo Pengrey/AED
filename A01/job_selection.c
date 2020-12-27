@@ -72,17 +72,14 @@ int compare_tasks_E(const void *t1,const void *t2)
 {
   int d1,d2;
 
-  d1 = ((task_t *)t1)->starting_date;
-  d2 = ((task_t *)t2)->starting_date;
-  if(d1 != d2)
-    return (d1 > d2) ? -1 : +1;
-  d1 = ((task_t *)t1)->ending_date;
-  d2 = ((task_t *)t2)->ending_date;
-  if(d1 != d2)
-    return (d1 < d2) ? -1 : +1;
-  return 0;
+  d1 = ((task_t *)t1)->best_assigned_to;
+  d2 = ((task_t *)t2)->best_assigned_to;
+  if(d1 >= 0)
+    return -1;
+  else if(d2 >= 0)
+    return -1;
+  return 1;
 }
-
 int compare_tasks(const void *t1,const void *t2)
 {
   int d1,d2;
@@ -273,6 +270,7 @@ int recurse(problem_t *prob,int t)
         prob->busy[p]= busy_save ;
         prob->task[t].assigned_to = task_save ;
         prob->total_profit = profit_save;
+        break;
       }
     }
   }
@@ -301,8 +299,6 @@ int nonRec(problem_t *problem){
 #undef PROG
   return 1;
 }
-#endif
-#if 1
 int nonRec(problem_t *problem, int programmer){
 #define TASK  problem->task[t]
 #define PROG  problem->busy[programmer]
@@ -321,6 +317,47 @@ int nonRec(problem_t *problem, int programmer){
   return 1;
 }
 #endif
+int recurse1(problem_t *prob,int t,int p)
+{
+
+  int busy_save;
+  int profit_save;
+  int task_save;
+  if(t >= prob->T)
+  {
+    prob->casos++;
+    if(prob->total_profit > prob->biggest_profit)
+    {
+      prob->biggest_profit = prob->total_profit;
+      for(int j = 0; j < prob->T; j++)
+      {
+        prob->task[j].best_assigned_to = prob->task[j].assigned_to;
+      }
+    }
+    return 1;
+  }
+
+  recurse1(prob,p, t + 1);
+    if(prob->busy[p] < prob->task[t].starting_date)
+    {
+      if(prob->task[t].assigned_to < 0)
+      {
+        busy_save = prob->busy[p];
+        task_save = prob->task[t].assigned_to;
+        profit_save = prob->total_profit;
+
+        prob->busy[p]= prob->task[t].ending_date;
+        prob->task[t].assigned_to = p ;
+        prob->total_profit += prob->task[t].profit;
+        recurse1(prob,p, t+1);
+        prob->busy[p]= busy_save ;
+        prob->task[t].assigned_to = task_save ;
+        prob->total_profit = profit_save;
+
+    }
+  }
+  return 0;
+}
 
 #if 1
 
@@ -369,9 +406,10 @@ static void solve(problem_t *problem)
   else
   {
     puts("nrecurse");
-    qsort((void *)&problem->task[0],(size_t)problem->T,sizeof(problem->task[0]),compare_tasks_E);
     for(int p = 0; p < problem->P; p++)
-      nonRec(problem, p);
+    {
+      recurse1(problem,0, p);
+    }
   }
    //  call your (recursive?) function to solve the problem here
   problem->cpu_time = cpu_time() - problem->cpu_time;
