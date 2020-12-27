@@ -270,7 +270,6 @@ def nonRec(problem,programmer):
             problem.busy[programmer] = problem.task[t].ending_date
             problem.biggest_profit = problem.biggest_profit + problem.biggest_profit
             problem.task[t].best_assigned_to = programmer
-            break
     return 1
 
 
