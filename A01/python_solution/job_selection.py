@@ -249,19 +249,19 @@ def recurse(prob,t):
     recurse(prob,t+1)
 
     for p in range(0,prob.P):
-        if prob.busy[p] < prob.task[t].starting_date:
-            if prob.task[t].assigned_to < 0:
-                busy_save = prob.busy[p]
-                task_save = prob.task[t].assigned_to
-                profit_save = prob.total_profit
+        if (prob.busy[p] < prob.task[t].starting_date and prob.task[t].assigned_to < 0):
+            busy_save = prob.busy[p]
+            task_save = prob.task[t].assigned_to
+            profit_save = prob.total_profit
 
-                prob.busy[p] = prob.task[t].ending_date
-                prob.task[t].assigned_to = p
-                prob.total_profit += prob.task[t].profit
-                recurse(prob,t+1)
-                prob.busy[p] = busy_save
-                prob.task[t].assigned_to = task_save
-                prob.total_profit = profit_save
+            prob.busy[p] = prob.task[t].ending_date
+            prob.task[t].assigned_to = p
+            prob.total_profit += prob.task[t].profit
+            recurse(prob,t+1)
+            prob.busy[p] = busy_save
+            prob.task[t].assigned_to = task_save
+            prob.total_profit = profit_save
+            break
     return 0
 
 def nonRec(problem,programmer):
@@ -270,6 +270,7 @@ def nonRec(problem,programmer):
             problem.busy[programmer] = problem.task[t].ending_date
             problem.biggest_profit = problem.biggest_profit + problem.biggest_profit
             problem.task[t].best_assigned_to = programmer
+            break
     return 1
 
 
