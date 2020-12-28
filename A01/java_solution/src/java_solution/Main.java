@@ -130,18 +130,17 @@ public static void init_problem(Integer nmec, Integer T, Integer P, Integer I, P
   problem.setTotal_profit(0);
 
   Arrays.sort(problem.task);
-
-  if ( problem.I == 0 )
+  if (problem.I == 1 && problem.P == 1)
+  {
+    System.out.println("nrecurse");
+    nonRec(problem, g);
+  }
+  else
   {
     System.out.println("recurse");
     recurse(problem, 0);
   }
-  else
-  {
-    System.out.println("nrecurse");
-    for(int g = 0; g < problem.P; g++)
-      nonRec(problem, g);
-  }
+
   //endind time
   final long endingTime = System.nanoTime();
   problem.setCpu_time((double)(endingTime - startTime) / 1000000000);
@@ -214,6 +213,7 @@ public static void init_problem(Integer nmec, Integer T, Integer P, Integer I, P
 	  }
 	  return 0;
 	}
+	
 	private static int nonRec(Problem_T problem, int g) {
 				  int t = 0;
 				  for( t = 0; t < problem.getT(); t++){
