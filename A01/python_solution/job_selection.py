@@ -291,15 +291,13 @@ def solve(problem):
     problem.biggest_profit = 0
     problem.total_profit = 0
     
-    quickSort(problem.task,0,problem.T-1)
-    if(problem.I == 0):
-        fp.write("recurse\n")
-        recurse(problem, 0)
-    else:
+    if(problem.I !=1 and problem.P ==1):
         fp.write("nrecurse\n")
         quickSortE(problem.task,0,problem.T-1)
-        for p in range(0,problem.P):
-            nonRec(problem, p)
+        nonRec(problem, p)
+    else:
+        fp.write("recurse\n")
+        recurse(problem, 0)        
     problem.cpu_time = time.time() - problem.cpu_time      
     #
     # save solution data
