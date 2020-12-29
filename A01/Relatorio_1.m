@@ -270,7 +270,7 @@ axis(ax,"tight");
 % Results time 2d (muda o numero de progs)
 
 clear all
-task=1;                                     % numero fixo de tasks, mudar para o pretendido
+task=10;                                     % numero fixo de tasks, mudar para o pretendido
 results = load('c results\files098475\Execution_Times0.txt');
 tasks=results(:,1);
 progs=results(:,2);
@@ -549,8 +549,16 @@ c= mesh(times2);
 c.FaceColor = [0, 0.4470, 0.7410];
 
 hold off;
-legend('C','Java','Python')
-title("Execution Time")
+legend('C','Java','Python');
+title("Execution Time");
 ylabel("Number of Tasks");
 xlabel("Number of Programmers");
 zlabel("Execution Times");
+%%
+% Histograma
+
+clear all
+
+results = load('./c results/Histograma data/27_06_0.txt');
+h=histogram(results);
+h.FaceColor=[0.4940 0.1840 0.5560];
