@@ -78,7 +78,7 @@ axis(ay,"tight");
 % Results profits
 
 clear all
-results = load('profitfilename1.txt');
+results = load('./c results/files098475/profits0.txt');
 tasks=results(:,1);
 progs=results(:,2);
 profit=results(:,3);
@@ -86,7 +86,8 @@ profits= zeros(64,10);
 for i=1:length(profit)
         profits(tasks(i),progs(i))=profit(i);
 end
-mesh(profits);
+m = mesh(profits);
+%m.FaceColor = 'flat';
 title("Max Profits")
 ylabel("Number of Tasks");
 xlabel("Number of Programmers");
@@ -95,7 +96,7 @@ zlabel("Maximum Profits");
 % Results time
 
 clear all
-results = load('execution1.txt');
+results = load('./c results/files098475/Execution_Times0.txt');
 tasks=results(:,1);
 progs=results(:,2);
 time=results(:,3);
@@ -103,7 +104,8 @@ times= zeros(64,10);
 for i=1:length(time)
         times(tasks(i),progs(i))=time(i);
 end
-mesh(times);
+m = mesh(times);
+%m.FaceColor = 'flat';
 title("Execution Time")
 ylabel("Number of Tasks");
 xlabel("Number of Programmers");
@@ -112,7 +114,7 @@ zlabel("Execution Times");
 % Results time (log)
 
 clear all
-results = load('execution1.txt');
+results = load('./c results/files098475/Execution_Times0.txt');
 tasks=results(:,1);
 progs=results(:,2);
 time=results(:,3);
@@ -126,11 +128,107 @@ ylabel("Number of Tasks");
 xlabel("Number of Programmers");
 zlabel("Execution Times");
 %%
+% Results time (all nmecs)
+
+clear all
+
+results0 = load('./c results/files098475/Execution_Times0.txt');
+tasks0=results0(:,1);
+progs0=results0(:,2);
+time0=results0(:,3);
+times0= zeros(64,10);
+for i=1:length(time0)
+        times0(tasks0(i),progs0(i))=time0(i);
+end
+
+results1 = load('./c results/files097827/Execution_Times0.txt');
+tasks1=results1(:,1);
+progs1=results1(:,2);
+time1=results1(:,3);
+times1= zeros(64,10);
+for i=1:length(time1)
+        times1(tasks1(i),progs1(i))=time1(i);
+end
+
+results2 = load('./c results/files097880/Execution_Times0.txt');
+tasks2=results2(:,1);
+progs2=results2(:,2);
+time2=results2(:,3);
+times2= zeros(64,10);
+for i=1:length(time2)
+        times2(tasks2(i),progs2(i))=time2(i);
+end
+
+r= mesh(times0);
+r.FaceColor = 'r';
+hold on;
+
+m= mesh(times1);
+m.FaceColor = 'b';
+
+c= mesh(times2);
+c.FaceColor = 'g';
+
+hold off;
+legend('98475','97827','97880')
+title("Execution Time")
+ylabel("Number of Tasks");
+xlabel("Number of Programmers");
+zlabel("Execution Times");
+%%
+% Results time (all nmecs log)
+
+clear all
+
+results0 = load('./c results/files098475/Execution_Times0.txt');
+tasks0=results0(:,1);
+progs0=results0(:,2);
+time0=results0(:,3);
+times0= zeros(64,10);
+for i=1:length(time0)
+        times0(tasks0(i),progs0(i))=log(time0(i));
+end
+
+results1 = load('./c results/files097827/Execution_Times0.txt');
+tasks1=results1(:,1);
+progs1=results1(:,2);
+time1=results1(:,3);
+times1= zeros(64,10);
+for i=1:length(time1)
+        times1(tasks1(i),progs1(i))=log(time1(i));
+end
+
+results2 = load('./c results/files097880/Execution_Times0.txt');
+tasks2=results2(:,1);
+progs2=results2(:,2);
+time2=results2(:,3);
+times2= zeros(64,10);
+for i=1:length(time2)
+        times2(tasks2(i),progs2(i))=log(time2(i));
+end
+
+r= mesh(times0);
+r.FaceColor = 'r';
+hold on;
+
+m= mesh(times1);
+m.FaceColor = 'b';
+
+c= mesh(times2);
+c.FaceColor = 'g';
+
+hold off;
+legend('98475','97827','97880');
+title("Execution Time");
+ylabel("Number of Tasks");
+xlabel("Number of Programmers");
+zlabel("Execution Times");
+%%
 % Results time 2d (muda o numero de tasks)
 
 clear all
-prog=10;                                     % numero fixo de progs, mudar para o pretendido
-results = load('execution1.txt');
+prog=8;                                     % numero fixo de progs, mudar para o pretendido
+results = load('./c results/files098475/Execution_Times0.txt');
 tasks=results(:,1);
 progs=results(:,2);
 time=results(:,3);
@@ -140,6 +238,7 @@ for i=1:length(time)
 end
 result=times(:,prog);
 plot(result);
+
 grid("minor");
 title("Execution Time")
 xlabel("Number of Tasks");
@@ -151,7 +250,7 @@ axis(ax,"tight");
 
 clear all
 prog=1;                                     % numero fixo de progs, mudar para o pretendido
-results = load('execution1.txt');
+results = load('c results\files098475\Execution_Times0.txt');
 tasks=results(:,1);
 progs=results(:,2);
 time=results(:,3);
@@ -172,7 +271,7 @@ axis(ax,"tight");
 
 clear all
 task=1;                                     % numero fixo de tasks, mudar para o pretendido
-results = load('execution1.txt');
+results = load('c results\files098475\Execution_Times0.txt');
 tasks=results(:,1);
 progs=results(:,2);
 time=results(:,3);
@@ -193,7 +292,7 @@ axis(ax,"tight");
 
 clear all
 task=1;                                     % numero fixo de tasks, mudar para o pretendido
-results = load('execution1.txt');
+results = load('c results\files098475\Execution_Times0.txt');
 tasks=results(:,1);
 progs=results(:,2);
 time=results(:,3);
@@ -209,3 +308,249 @@ xlabel("Number of Programmers");
 ylabel("Execution Times (Log)");
 ax=gca;
 axis(ax,"tight");
+%%
+% Results time all nmecs 2d (muda o numero de tasks)
+
+clear all
+prog=7;                                     % numero fixo de progs, mudar para o pretendido
+
+results0 = load('./c results/files098475/Execution_Times0.txt');
+tasks0=results0(:,1);
+progs0=results0(:,2);
+time0=results0(:,3);
+times0= zeros(64,10);
+for i=1:length(time0)
+        times0(tasks0(i),progs0(i))=time0(i);
+end
+result0=times0(:,prog);
+
+results1 = load('./c results/files097827/Execution_Times0.txt');
+tasks1=results1(:,1);
+progs1=results1(:,2);
+time1=results1(:,3);
+times1= zeros(64,10);
+for i=1:length(time1)
+        times1(tasks1(i),progs1(i))=time1(i);
+end
+result1=times1(:,prog);
+
+results2 = load('./c results/files097880/Execution_Times0.txt');
+tasks2=results2(:,1);
+progs2=results2(:,2);
+time2=results2(:,3);
+times2= zeros(64,10);
+for i=1:length(time2)
+        times2(tasks2(i),progs2(i))=time2(i);
+end
+result2=times2(:,prog);
+
+plot(result0,'r');
+hold on;
+plot(result1,'g');
+plot(result2,'b');
+hold off;
+
+legend('98475','97827','97880');
+grid("minor");
+title("Execution Time")
+xlabel("Number of Tasks");
+ylabel("Execution Times");
+ax=gca;
+axis(ax,"tight");
+%%
+% Results time all nmecs 2d (log) (muda o numero de tasks)
+
+clear all
+prog=7;                                     % numero fixo de progs, mudar para o pretendido
+
+results0 = load('./c results/files098475/Execution_Times0.txt');
+tasks0=results0(:,1);
+progs0=results0(:,2);
+time0=results0(:,3);
+times0= zeros(64,10);
+for i=1:length(time0)
+        times0(tasks0(i),progs0(i))=log(time0(i));
+end
+result0=times0(:,prog);
+
+results1 = load('./c results/files097827/Execution_Times0.txt');
+tasks1=results1(:,1);
+progs1=results1(:,2);
+time1=results1(:,3);
+times1= zeros(64,10);
+for i=1:length(time1)
+        times1(tasks1(i),progs1(i))=log(time1(i));
+end
+result1=times1(:,prog);
+
+results2 = load('./c results/files097880/Execution_Times0.txt');
+tasks2=results2(:,1);
+progs2=results2(:,2);
+time2=results2(:,3);
+times2= zeros(64,10);
+for i=1:length(time2)
+        times2(tasks2(i),progs2(i))=log(time2(i));
+end
+result2=times2(:,prog);
+
+plot(result0,'r');
+hold on;
+plot(result1,'g');
+plot(result2,'b');
+hold off;
+
+legend('98475','97827','97880');
+grid("minor");
+title("Execution Time (log)")
+xlabel("Number of Tasks");
+ylabel("Execution Times");
+ax=gca;
+axis(ax,"tight");
+%%
+% Results time all nmecs 2d (muda o numero de progs)
+
+clear all
+task=30;                                     % numero fixo de tasks, mudar para o pretendido
+
+
+results0 = load('./c results/files098475/Execution_Times0.txt');
+tasks0=results0(:,1);
+progs0=results0(:,2);
+time0=results0(:,3);
+times0= zeros(64,10);
+for i=1:length(time0)
+        times0(tasks0(i),progs0(i))=time0(i);
+end
+result0=times0(task,:);
+
+results1 = load('./c results/files097827/Execution_Times0.txt');
+tasks1=results1(:,1);
+progs1=results1(:,2);
+time1=results1(:,3);
+times1= zeros(64,10);
+for i=1:length(time1)
+        times1(tasks1(i),progs1(i))=time1(i);
+end
+result1=times1(task,:);
+
+results2 = load('./c results/files097880/Execution_Times0.txt');
+tasks2=results2(:,1);
+progs2=results2(:,2);
+time2=results2(:,3);
+times2= zeros(64,10);
+for i=1:length(time2)
+        times2(tasks2(i),progs2(i))=time2(i);
+end
+result2=times2(task,:);
+
+plot(result0,'r');
+hold on;
+plot(result1,'g');
+plot(result2,'b');
+hold off;
+
+legend('98475','97827','97880');
+grid("minor");
+title("Execution Time")
+xlabel("Number of Programmers");
+ylabel("Execution Times");
+ax=gca;
+axis(ax,"tight");
+%%
+% Results time all nmecs 2d (log) (muda o numero de progs)
+
+clear all
+task=30;                                     % numero fixo de tasks, mudar para o pretendido
+
+
+results0 = load('./c results/files098475/Execution_Times0.txt');
+tasks0=results0(:,1);
+progs0=results0(:,2);
+time0=results0(:,3);
+times0= zeros(64,10);
+for i=1:length(time0)
+        times0(tasks0(i),progs0(i))=log(time0(i));
+end
+result0=times0(task,:);
+
+results1 = load('./c results/files097827/Execution_Times0.txt');
+tasks1=results1(:,1);
+progs1=results1(:,2);
+time1=results1(:,3);
+times1= zeros(64,10);
+for i=1:length(time1)
+        times1(tasks1(i),progs1(i))=log(time1(i));
+end
+result1=times1(task,:);
+
+results2 = load('./c results/files097880/Execution_Times0.txt');
+tasks2=results2(:,1);
+progs2=results2(:,2);
+time2=results2(:,3);
+times2= zeros(64,10);
+for i=1:length(time2)
+        times2(tasks2(i),progs2(i))=log(time2(i));
+end
+result2=times2(task,:);
+
+plot(result0,'r');
+hold on;
+plot(result1,'g');
+plot(result2,'b');
+hold off;
+
+legend('98475','97827','97880');
+grid("minor");
+title("Execution Time (log)")
+xlabel("Number of Programmers");
+ylabel("Execution Times");
+ax=gca;
+axis(ax,"tight");
+%%
+% Results time (all languages)
+
+clear all
+
+results0 = load('./c results/files098475/Execution_Times0.txt');
+tasks0=results0(:,1);
+progs0=results0(:,2);
+time0=results0(:,3);
+times0= zeros(64,10);
+for i=1:length(time0)
+        times0(tasks0(i),progs0(i))=time0(i);
+end
+
+results1 = load('./c results/files097827/Execution_Times0.txt');
+tasks1=results1(:,1);
+progs1=results1(:,2);
+time1=results1(:,3);
+times1= zeros(64,10);
+for i=1:length(time1)
+        times1(tasks1(i),progs1(i))=time1(i);
+end
+
+results2 = load('./c results/files097880/Execution_Times0.txt');
+tasks2=results2(:,1);
+progs2=results2(:,2);
+time2=results2(:,3);
+times2= zeros(64,10);
+for i=1:length(time2)
+        times2(tasks2(i),progs2(i))=time2(i);
+end
+
+r= mesh(times0);
+r.FaceColor = [0, 0.5, 0];
+hold on;
+
+m= mesh(times1);
+m.FaceColor = [0.8500, 0.3250, 0.0980];
+
+c= mesh(times2);
+c.FaceColor = [0, 0.4470, 0.7410];
+
+hold off;
+legend('C','Java','Python')
+title("Execution Time")
+ylabel("Number of Tasks");
+xlabel("Number of Programmers");
+zlabel("Execution Times");
