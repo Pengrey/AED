@@ -1,3 +1,71 @@
+// NMECS:
+// Camila  - 97880
+// Pedro   - 97827
+// Rodrigo - 98475
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// AED, 2020/2021
+//
+// TODO: place the student number and name here
+// TODO: place the student number and name here (if applicable)
+// TODO: place the student number and name here (if applicable)
+//
+// Brute-force solution of the generalized weighted job selection problem
+//
+// Compile with "cc -Wall -O2 job_selection.c -lm" or equivalent
+//
+// In the generalized weighted job selection problem we will solve here we have T programming tasks and P programmers.
+// Each programming task has a starting date (an integer), an ending date (another integer), and a profit (yet another
+// integer). Each programming task can be either left undone or it can be done by a single programmer. At any given
+// date each programmer can be either idle or it can be working on a programming task. The goal is to select the
+// programming tasks that generate the largest profit.
+//
+
+
+// Things to do:
+//   0. (mandatory)
+//      Place the student numbers and names at the top of this file. DONE
+//   1. (highly recommended)
+//      Read and understand this code. DONE?
+//   2. (mandatory)
+
+
+//      Solve the problem for each student number of the group and for
+//        N=1, 2, ..., as higher as you can get and
+//        P=1, 2, ... min(8,N)
+//      Present the best profits in a table (one table per student number).
+//      Present all execution times in a graph (use a different color for the times of each student number).
+//      Draw the solutions for the highest N you were able to do.
+
+
+//   3. (optional) DONE
+//      Ignore the profits (or, what is the same, make all profits equal); what is the largest number of programming
+//      tasks that can be done? 
+
+//   4. (optional)
+//      Count the number of valid task assignments. Calculate and display an histogram of the number of occurrences of
+//      each total profit. Does it follow approximately a normal distribution?
+
+//   5. (optional)
+//      Try to improve the execution time of the program (use the branch-and-bound technique).
+//      Can you use divide and conquer to solve this problem? yes.
+//      Can you use dynamic programming to solve this problem? no.
+
+//   6. (optional)
+//      For each problem size, and each student number of the group, generate one million (or more!) valid random
+//      assignments and compute the best solution found in this way. Compare these solutions with the ones found in
+//      item 2.
+
+//   7. (optional)
+//      Surprise us, by doing something more! DONE
+
+//   8. (mandatory)
+//      Write a report explaining what you did. Do not forget to put all your code in an appendix.
+//
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,7 +123,7 @@ typedef struct
   int T;              // I  number of tasks
   int P;              // I  number of programmers
   int I;              // I  if 1, ignore profits
-  int casos;          // I  if 1, ignore profits
+  long long casos;          // I  if 1, ignore profits
   int total_profit;   // S  current total profit
   int biggest_profit; // S  current total profit
   double cpu_time;    // S  time it took to find the solution
@@ -295,21 +363,20 @@ int nonRec(problem_t *problem){
 }
 #endif
 #if 1
-int nonRec(problem_t *problem, int programmer)
-{
-#define TASK problem->task[t]
-#define PROG problem->busy[programmer]
+int nonRec(problem_t *problem, int programmer){
+#define TASK  problem->task[t]
+#define PROG  problem->busy[programmer]
   int t = 0;
 
-  for (t = 0; t < problem->T; t++)
-  {
-    if (TASK.starting_date > PROG && TASK.best_assigned_to == -1)
+  for( t = 0; t < problem->T; t++){
+    if( TASK.starting_date > PROG && TASK.best_assigned_to == -1 )
     {
       PROG = TASK.ending_date;
-      problem->biggest_profit += TASK.profit;
+      problem->biggest_profit+=TASK.profit;
       TASK.best_assigned_to = programmer;
     }
   }
+
 #undef TASK
 #undef PROG
   return 1;
@@ -380,7 +447,7 @@ static void solve(problem_t *problem)
   }
 #undef TASK
   fprintf(fp, "NMec = %d\n", problem->NMec);
-  fprintf(fp, "Viable Sol. = %d\n", problem->casos);
+  fprintf(fp, "Viable Sol. = %lld\n", problem->casos);
   fprintf(fp, "Profit = %d\n", problem->biggest_profit);
   fprintf(fp, "T = %d\n", problem->T);
   fprintf(fp, "P = %d\n", problem->P);
