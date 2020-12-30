@@ -140,7 +140,7 @@ def init_problem(NMec,T,P,ignore_profit,problem):
     #
     # get values from file with values from tasks generated from c program
     #
-    cwif="task_{nmec:06d}_{t:02d}_{p:02d}_{i:02d}.txt".format(nmec = NMec , t = T, p = P, i = problem.I)
+    cwif="../t{nmec:06d}/task_{nmec:06d}_{t:02d}_{p:02d}_{i:02d}.txt".format(nmec = NMec , t = T, p = P, i = problem.I)
     f=open(cwif,"r")
     tasks= f.read().split()
     f.close()
@@ -209,12 +209,17 @@ def nonRec(problem,programmer):
             problem.busy[programmer] = problem.task[t].ending_date
             problem.biggest_profit = problem.biggest_profit + problem.biggest_profit
             problem.task[t].best_assigned_to = programmer
+            break
     return 1
 
 
 def solve(problem):
-    os.mkdir(problem.dir_name)
+    
+    path ="{nmec:06d}".format(nmec = problem.NMec)
+    if not os.path.exists(path):
+        os.mkdir(problem.dir_name)
     fp = open(problem.file_name,"w")
+
     #
     # solve
     #
@@ -235,7 +240,7 @@ def solve(problem):
         nonRec(problem, p)
     else:
         fp.write("recurse\n")
-        recurse(problem, 0)        
+        recurse(problem, 0)    
     problem.cpu_time = time.time() - problem.cpu_time      
     #
     # save solution data
