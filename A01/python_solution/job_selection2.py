@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 import os
 import math
-
 import random
 import array
 import sys
@@ -141,7 +140,7 @@ def init_problem(NMec,T,P,ignore_profit,problem):
     #
     # get values from file with values from tasks generated from c program
     #
-    cwif="tasks/task_{nmec:06d}_{t:02d}_{p:02d}_{i:02d}.txt".format(nmec = NMec , t = T, p = P, i = problem.I)
+    cwif="task_{nmec:06d}_{t:02d}_{p:02d}_{i:02d}.txt".format(nmec = NMec , t = T, p = P, i = problem.I)
     f=open(cwif,"r")
     tasks= f.read().split()
     f.close()
@@ -214,12 +213,8 @@ def nonRec(problem,programmer):
 
 
 def solve(problem):
-    
-    path ="{nmec:06d}".format(nmec = problem.NMec)
-    if not os.path.exists(path):
-        os.mkdir(problem.dir_name)
+    os.mkdir(problem.dir_name)
     fp = open(problem.file_name,"w")
-
     #
     # solve
     #
@@ -234,7 +229,7 @@ def solve(problem):
     problem.biggest_profit = 0
     problem.total_profit = 0
     
-    if(problem.I !=1 and problem.P ==1):
+    if(problem.I ==1 and problem.P ==1):
         fp.write("nrecurse\n")
         quickSortE(problem.task,0,problem.T-1)
         nonRec(problem, p)

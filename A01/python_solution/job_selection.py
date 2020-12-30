@@ -1,4 +1,3 @@
-#!/usr/bin/python
 from dataclasses import dataclass
 import os
 import math
@@ -222,7 +221,7 @@ def init_problem(NMec,T,P,ignore_profit,problem):
     else:
         problem.dir_name = dir
 
-    file = "results/{nmec:06d}/{t:02d}_{p:02d}_{i:d}.txt".format(nmec = NMec, t = T, p = P, i = problem.I)
+    file = "{nmec:06d}/{t:02d}_{p:02d}_{i:d}.txt".format(nmec = NMec, t = T, p = P, i = problem.I)
     if(len(file) >= 64):
         print("File name too large!\n")
         exit(1)
@@ -292,7 +291,7 @@ def solve(problem):
     problem.biggest_profit = 0
     problem.total_profit = 0
     
-    if(problem.I !=1 and problem.P ==1):
+    if(problem.I ==1 and problem.P ==1):
         fp.write("nrecurse\n")
         quickSortE(problem.task,0,problem.T-1)
         nonRec(problem, p)
