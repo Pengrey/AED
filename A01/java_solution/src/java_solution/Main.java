@@ -124,7 +124,7 @@ public class Main {
     problem.setTotal_profit(0);
 
     Arrays.sort(problem.task);
-    if (problem.I == 1 && problem.P == 1) {
+    if (problem.I != 1 && problem.P == 1) {
       System.out.println("nrecurse");
       nonRec(problem, 0);
     } else {
