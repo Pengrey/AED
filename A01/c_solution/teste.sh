@@ -10,7 +10,7 @@
 
 mkdir -p $(printf "%06d" $1)
 for t in {1..64};do
-  for p in {1..8};do
+  for p in {1..10};do
     if [[ !(-n  $( cat $(printf "%06d/%02d_%02d_%d.txt" $1 $t $p $2)) && -n $(grep "End" $(printf "%06d/%02d_%02d_%d.txt" $1 $t $p $2)) ) ]] && [[ $p -le $t ]];then
       echo "timeout $3 ./job_selection $1 $t $p $2"
       timeout $3 ./job_selection $1 $t $p $2 > /dev/null
