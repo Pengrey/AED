@@ -3,8 +3,8 @@
 % Tabela de tasks
 
 clear all
-str = convertStringsToChars(splitlines(extractFileText('casks_35_04_1.txt')));
-profits = str2double(splitlines(extractFileText('profits_35_04_1.txt')));
+str = convertStringsToChars(splitlines(extractFileText('./002020/tasks_20_04_0.txt')));
+profits = str2double(splitlines(extractFileText('./002020/profits_20_04_0.txt')));
 progs={};
 prog={};
 tasks={};
@@ -78,7 +78,7 @@ axis(ay,"tight");
 % Results profits
 
 clear all
-results = load('./c results/files098475/profits0.txt');
+results = load('./c_solution/files098475/profits0.txt');
 tasks=results(:,1);
 progs=results(:,2);
 profit=results(:,3);
@@ -87,7 +87,8 @@ for i=1:length(profit)
         profits(tasks(i),progs(i))=profit(i);
 end
 m = mesh(profits);
-%m.FaceColor = 'flat';
+m.FaceColor = 'flat';
+colormap("cool");
 title("Max Profits")
 ylabel("Number of Tasks");
 xlabel("Number of Programmers");
@@ -106,6 +107,7 @@ for i=1:length(time)
 end
 m = mesh(times);
 %m.FaceColor = 'flat';
+colormap("cool");
 title("Execution Time")
 ylabel("Number of Tasks");
 xlabel("Number of Programmers");
@@ -123,6 +125,7 @@ for i=1:length(time)
         times(tasks(i),progs(i))=log(time(i));
 end
 mesh(times);
+colormap("cool");
 title("Execution Time (log)")
 ylabel("Number of Tasks");
 xlabel("Number of Programmers");
@@ -132,7 +135,7 @@ zlabel("Execution Times");
 
 clear all
 
-results0 = load('./c results/files098475/Execution_Times0.txt');
+results0 = load('./c_solution/files097827/Execution_Times0.txt');
 tasks0=results0(:,1);
 progs0=results0(:,2);
 time0=results0(:,3);
@@ -141,7 +144,7 @@ for i=1:length(time0)
         times0(tasks0(i),progs0(i))=time0(i);
 end
 
-results1 = load('./c results/files097827/Execution_Times0.txt');
+results1 = load('./c_solution/files097880/Execution_Times0.txt');
 tasks1=results1(:,1);
 progs1=results1(:,2);
 time1=results1(:,3);
@@ -150,7 +153,7 @@ for i=1:length(time1)
         times1(tasks1(i),progs1(i))=time1(i);
 end
 
-results2 = load('./c results/files097880/Execution_Times0.txt');
+results2 = load('./c_solution/files098475/Execution_Times0.txt');
 tasks2=results2(:,1);
 progs2=results2(:,2);
 time2=results2(:,3);
@@ -160,17 +163,17 @@ for i=1:length(time2)
 end
 
 r= mesh(times0);
-r.FaceColor = 'r';
+r.FaceColor = [0.3010 0.7450 0.8330];
 hold on;
 
 m= mesh(times1);
-m.FaceColor = 'b';
+m.FaceColor = [0.4940 0.1840 0.5560];
 
 c= mesh(times2);
-c.FaceColor = 'g';
+c.FaceColor = [0 0.4470 0.9010];
 
 hold off;
-legend('98475','97827','97880')
+legend('97827','97880','98475')
 title("Execution Time")
 ylabel("Number of Tasks");
 xlabel("Number of Programmers");
@@ -208,14 +211,14 @@ for i=1:length(time2)
 end
 
 r= mesh(times0);
-r.FaceColor = 'r';
+r.FaceColor = [0.3010 0.7450 0.8330];
 hold on;
 
 m= mesh(times1);
-m.FaceColor = 'b';
+m.FaceColor = [0.4940 0.1840 0.5560];
 
 c= mesh(times2);
-c.FaceColor = 'g';
+c.FaceColor = [0 0.4470 0.9010];
 
 hold off;
 legend('98475','97827','97880');
@@ -344,12 +347,14 @@ for i=1:length(time2)
 end
 result2=times2(:,prog);
 
-plot(result0,'r');
+p0=plot(result0,'LineWidth',1);
+p0.Color=[0.3010 0.7450 0.8330];
 hold on;
-plot(result1,'g');
-plot(result2,'b');
+p1=plot(result1,'LineWidth',1);
+p1.Color=[0.4940 0.1840 0.5560];
+p2=plot(result2,'LineWidth',1);
+p2.Color=[0 0.4470 0.9010];
 hold off;
-
 legend('98475','97827','97880');
 grid("minor");
 title("Execution Time")
@@ -393,12 +398,14 @@ for i=1:length(time2)
 end
 result2=times2(:,prog);
 
-plot(result0,'r');
+p0=plot(result0,'LineWidth',1);
+p0.Color=[0.3010 0.7450 0.8330];
 hold on;
-plot(result1,'g');
-plot(result2,'b');
+p1=plot(result1,'LineWidth',1);
+p1.Color=[0.4940 0.1840 0.5560];
+p2=plot(result2,'LineWidth',1);
+p2.Color=[0 0.4470 0.9010];
 hold off;
-
 legend('98475','97827','97880');
 grid("minor");
 title("Execution Time (log)")
@@ -410,10 +417,10 @@ axis(ax,"tight");
 % Results time all nmecs 2d (muda o numero de progs)
 
 clear all
-task=30;                                     % numero fixo de tasks, mudar para o pretendido
+task=41;                                     % numero fixo de tasks, mudar para o pretendido
 
 
-results0 = load('./c results/files098475/Execution_Times0.txt');
+results0 = load('./c_solution/files097827/Execution_Times0.txt');
 tasks0=results0(:,1);
 progs0=results0(:,2);
 time0=results0(:,3);
@@ -423,7 +430,7 @@ for i=1:length(time0)
 end
 result0=times0(task,:);
 
-results1 = load('./c results/files097827/Execution_Times0.txt');
+results1 = load('./c_solution/files097880/Execution_Times0.txt');
 tasks1=results1(:,1);
 progs1=results1(:,2);
 time1=results1(:,3);
@@ -433,7 +440,7 @@ for i=1:length(time1)
 end
 result1=times1(task,:);
 
-results2 = load('./c results/files097880/Execution_Times0.txt');
+results2 = load('./c_solution/files098475/Execution_Times0.txt');
 tasks2=results2(:,1);
 progs2=results2(:,2);
 time2=results2(:,3);
@@ -443,13 +450,16 @@ for i=1:length(time2)
 end
 result2=times2(task,:);
 
-plot(result0,'r');
+p0=plot(result0,'LineWidth',1);
+p0.Color=[0.3010 0.7450 0.8330];
 hold on;
-plot(result1,'g');
-plot(result2,'b');
+p1=plot(result1,'LineWidth',1);
+p1.Color=[0.4940 0.1840 0.5560];
+p2=plot(result2,'LineWidth',1);
+p2.Color=[0 0.4470 0.9010];
 hold off;
 
-legend('98475','97827','97880');
+legend('97827','97880','98475');
 grid("minor");
 title("Execution Time")
 xlabel("Number of Programmers");
@@ -460,10 +470,10 @@ axis(ax,"tight");
 % Results time all nmecs 2d (log) (muda o numero de progs)
 
 clear all
-task=30;                                     % numero fixo de tasks, mudar para o pretendido
+task=41;                                     % numero fixo de tasks, mudar para o pretendido
 
 
-results0 = load('./c results/files098475/Execution_Times0.txt');
+results0 = load('./c_solution/files097827/Execution_Times0.txt');
 tasks0=results0(:,1);
 progs0=results0(:,2);
 time0=results0(:,3);
@@ -473,7 +483,7 @@ for i=1:length(time0)
 end
 result0=times0(task,:);
 
-results1 = load('./c results/files097827/Execution_Times0.txt');
+results1 = load('./c_solution/files097880/Execution_Times0.txt');
 tasks1=results1(:,1);
 progs1=results1(:,2);
 time1=results1(:,3);
@@ -483,7 +493,7 @@ for i=1:length(time1)
 end
 result1=times1(task,:);
 
-results2 = load('./c results/files097880/Execution_Times0.txt');
+results2 = load('./c_solution/files098475/Execution_Times0.txt');
 tasks2=results2(:,1);
 progs2=results2(:,2);
 time2=results2(:,3);
@@ -493,13 +503,16 @@ for i=1:length(time2)
 end
 result2=times2(task,:);
 
-plot(result0,'r');
+p0=plot(result0,'LineWidth',1);
+p0.Color=[0.3010 0.7450 0.8330];
 hold on;
-plot(result1,'g');
-plot(result2,'b');
+p1=plot(result1,'LineWidth',1);
+p1.Color=[0.4940 0.1840 0.5560];
+p2=plot(result2,'LineWidth',1);
+p2.Color=[0 0.4470 0.9010];
 hold off;
 
-legend('98475','97827','97880');
+legend('97827','97880','98475');
 grid("minor");
 title("Execution Time (log)")
 xlabel("Number of Programmers");
@@ -507,11 +520,30 @@ ylabel("Execution Times");
 ax=gca;
 axis(ax,"tight");
 %%
+% Results number of tasks
+
+clear all
+results = load('./c_solution/files002020/profits1.txt');
+tasks=results(:,1);
+progs=results(:,2);
+profit=results(:,3);
+profits= zeros(64,10);
+for i=1:length(profit)
+        profits(tasks(i),progs(i))=profit(i);
+end
+m = mesh(profits);
+m.FaceColor = 'flat';
+colormap("cool");
+title("Max Number of Tasks")
+ylabel("Number of Tasks");
+xlabel("Number of Programmers");
+zlabel("Maximum Tasks");
+%%
 % Results time (all languages)
 
 clear all
 
-results0 = load('./c results/files098475/Execution_Times0.txt');
+results0 = load('./c_solution/files002020/Execution_Times0.txt');
 tasks0=results0(:,1);
 progs0=results0(:,2);
 time0=results0(:,3);
@@ -520,7 +552,7 @@ for i=1:length(time0)
         times0(tasks0(i),progs0(i))=time0(i);
 end
 
-results1 = load('./c results/files097827/Execution_Times0.txt');
+results1 = load('./java_results/files002020/Execution_Times0.txt');
 tasks1=results1(:,1);
 progs1=results1(:,2);
 time1=results1(:,3);
@@ -529,7 +561,7 @@ for i=1:length(time1)
         times1(tasks1(i),progs1(i))=time1(i);
 end
 
-results2 = load('./c results/files097880/Execution_Times0.txt');
+results2 = load('./python_solution/files002020/Execution_Times0.txt');
 tasks2=results2(:,1);
 progs2=results2(:,2);
 time2=results2(:,3);
@@ -540,25 +572,84 @@ end
 
 r= mesh(times0);
 r.FaceColor = [0, 0.5, 0];
+% r.FaceAlpha = 0.5000
 hold on;
 
 m= mesh(times1);
 m.FaceColor = [0.8500, 0.3250, 0.0980];
+% m.FaceAlpha = 0.5000
 
 c= mesh(times2);
 c.FaceColor = [0, 0.4470, 0.7410];
-
+% c.FaceAlpha = 0.5000
 hold off;
+
 legend('C','Java','Python');
 title("Execution Time");
 ylabel("Number of Tasks");
 xlabel("Number of Programmers");
 zlabel("Execution Times");
 %%
+% Results time all nmecs 2d (muda o numero de tasks)
+
+clear all
+prog=7;                                     % numero fixo de progs, mudar para o pretendido
+
+results0 = load('./c_solution/files002020/Execution_Times0.txt');
+tasks0=results0(:,1);
+progs0=results0(:,2);
+time0=results0(:,3);
+times0= zeros(64,10);
+for i=1:length(time0)
+        times0(tasks0(i),progs0(i))=time0(i);
+end
+result0=times0(:,prog);
+
+results1 = load('./java_results/files002020/Execution_Times0.txt');
+tasks1=results1(:,1);
+progs1=results1(:,2);
+time1=results1(:,3);
+times1= zeros(64,10);
+for i=1:length(time1)
+        times1(tasks1(i),progs1(i))=time1(i);
+end
+result1=times1(:,prog);
+
+results2 = load('./python_solution/files002020/Execution_Times0.txt');
+tasks2=results2(:,1);
+progs2=results2(:,2);
+time2=results2(:,3);
+times2= zeros(64,10);
+for i=1:length(time2)
+        times2(tasks2(i),progs2(i))=time2(i);
+end
+result2=times2(:,prog);
+
+p0=plot(result0,'LineWidth',1);
+p0.Color=[0, 0.5, 0];
+hold on;
+
+p1=plot(result1,'LineWidth',1);
+p1.Color=[0.8500, 0.3250, 0.0980];
+
+p2=plot(result2,'LineWidth',1);
+p2.Color=[0, 0.4470, 0.7410];
+hold off;
+
+legend('C','Java','Python');
+grid("minor");
+title("Execution Time")
+xlabel("Number of Tasks");
+ylabel("Execution Times");
+ax=gca;
+axis(ax,"tight");
+%%
 % Histograma
 
 clear all
 
-results = load('./c results/Histograma data/27_06_0.txt');
+results = load('./Histograma data/27_06_0.txt');
 h=histogram(results);
 h.FaceColor=[0.4940 0.1840 0.5560];
+xlabel("Profits")
+ylabel("Count");
