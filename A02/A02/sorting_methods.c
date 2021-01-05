@@ -48,15 +48,16 @@ int main(int argc,char *argv[argc])
   functions[] =
   {
 #define EXPAND(name)  { name,# name }
-    EXPAND(bubble_sort),
-    EXPAND(shaker_sort),
-    EXPAND(insertion_sort),
-    EXPAND(Shell_sort),
-    EXPAND(quick_sort),
-    EXPAND(merge_sort),
-    EXPAND(heap_sort),
-    EXPAND(rank_sort),
-    EXPAND(selection_sort)
+    //EXPAND(bubble_sort),
+    //EXPAND(shaker_sort),
+    //EXPAND(insertion_sort),
+    //EXPAND(Shell_sort),
+    //EXPAND(quick_sort),
+    //EXPAND(merge_sort),
+    //EXPAND(heap_sort),
+    //EXPAND(rank_sort),
+    //EXPAND(selection_sort),
+    EXPAND(radix_base10)
 #undef EXPAND
   };
 #define N_FUNCTIONS (int)(sizeof(functions) / sizeof(functions[0]))
@@ -154,6 +155,7 @@ int main(int argc,char *argv[argc])
             v = cpu_time();
             (*functions[f_idx].function)(data,0,n);
             v = cpu_time() - v;
+
             // insertion sort!
             for(j = i;j > 0 && t[j - 1] > v;j--)
               t[j] = t[j - 1];

@@ -18,5 +18,5 @@ void merge_sort    (T *data,int first,int one_after_last);
 void heap_sort     (T *data,int first,int one_after_last);
 void rank_sort     (T *data,int first,int one_after_last);
 void selection_sort(T *data,int first,int one_after_last);
-
+void radix_base10  (T *data,int first,int one_after_last);
 #endif
