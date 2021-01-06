@@ -48,15 +48,15 @@ int main(int argc,char *argv[argc])
   functions[] =
   {
 #define EXPAND(name)  { name,# name }
-    //EXPAND(bubble_sort),
-    //EXPAND(shaker_sort),
-    //EXPAND(insertion_sort),
-    //EXPAND(Shell_sort),
-    //EXPAND(quick_sort),
-    //EXPAND(merge_sort),
-    //EXPAND(heap_sort),
-    //EXPAND(rank_sort),
-    //EXPAND(selection_sort),
+    EXPAND(bubble_sort),
+    EXPAND(shaker_sort),
+    EXPAND(insertion_sort),
+    EXPAND(Shell_sort),
+    EXPAND(quick_sort),
+    EXPAND(merge_sort),
+    EXPAND(heap_sort),
+    EXPAND(rank_sort),
+    EXPAND(selection_sort),
     EXPAND(radix_base10)
 #undef EXPAND
   };
