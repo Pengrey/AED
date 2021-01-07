@@ -6,7 +6,7 @@ s = 6;                                                          % escolher posi√
 
 results = load(strcat("./sorts/",sorts(s),"_sort"));
 
-for k = 2:4
+for k = 2:3
     plot(results(:,1),results(:,k));
     hold on;
 end
@@ -14,6 +14,8 @@ end
 errorbar(results(:,1),results(:,4),results(:,5));               % std dev no avg time
 
 hold off;
+%ax = axes;
+%ax.ColorOrder = [1 0 0; 0 1 0; 0 0 1; 0 0 0];
 grid("minor");
 xlabel("n");
 ylabel("Execution time");
