@@ -105,7 +105,7 @@ for s = 1:length(sorts)
                 case {3}
                     X = [ x.^2, x, 0*x+1 ];                             % build the X matrix for y(x) = Ax^2 + Bx + C       
                 case {1,7,8,9} 
-                    X = [ x.^2 , 0*x+1];                                % build the X matrix for y(x) = Ax^2 + c 
+                    X = [ x.^2 , 0*x+1];                                % build the X matrix for y(x) = Ax^2 + C 
                 case 10
                     X = x.*log(x);
                 otherwise
@@ -118,7 +118,7 @@ for s = 1:length(sorts)
                 case {2,4,5}
                     X = [ x.*log(x), x, 0*x+1 ];                        % build the X matrix for y(x) = Bx*log(x) + C        
                 case {7,8,9} 
-                    X = x.^2;                                           % build the X matrix for y(x) = Ax^2 
+                    X = [ x.^2, 0*x+1 ];                                % build the X matrix for y(x) = Ax^2 + C
                 case 6
                     X = [ x, 0*x+1 ];                                   % build the X matrix for y(x) = Bx + C
                 case 10
@@ -135,7 +135,7 @@ for s = 1:length(sorts)
                 case 6 
                     X = [ x, 0*x+1 ];                                   % build the X matrix for y(x) = Bx + C
                 case {7,8,9} 
-                    X = x.^2;                                           % build the X matrix for y(x) = Ax^2
+                    X = [ x.^2, 0*x+1 ];                                % build the X matrix for y(x) = Ax^2 + C
                 case 10
                     X = [ x.*log(x).^2, 0*x+1 ];                        % build the X matrix for y(x) = B*x*log(x) +c
                 otherwise
@@ -151,7 +151,7 @@ for s = 1:length(sorts)
     grid("minor");
     xlabel("n");
     ylabel("Execution time");
-    legend(data(d));
+    legend("Prático","Teórico");
     title(strrep(strcat(sorts(s),"_sort"),"_"," "));
     figure;
     %saveas(gcf,strcat(s,"_sort","_lst",".png"));                              %Uncomment to save image 
