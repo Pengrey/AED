@@ -343,42 +343,95 @@ decoder_global_data;
 // If you get a segmentation fault in our program you may need to increase the stack size (under GNU/linux, you can do it using the command "ulimit -s 16384")
 //
 
+// Code 1.0
+#if 0
 static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
 { 
-  _number_of_calls_ ++;                                                                     // encremento do numero de calls da recurse 
-  int retVal = 0;                                                                           // bool da existencia de uma codificação para o que se tem  
+  _number_of_calls_ ++;                                                                                     // incremento do numero de calls da recurse 
+  int retVal = 0;                                                                                           // bool da existencia de uma codificação para o que se tem  
 
   // Caso Terminal
-  if((decoded_idx == _original_message_size_)){                                             //
-    if(encoded_idx == strlen(_encoded_message_))                                            // 
-      _number_of_solutions_ ++;                                                             // encremento do numero de soluções
+  if((decoded_idx == _original_message_size_)){                                                             //
+    if(encoded_idx == strlen(_encoded_message_))                                                            // 
+      _number_of_solutions_ ++;                                                                             // encremento do numero de soluções
     return;
   }
-  char val[_c_->max_bits + 1];                                                              // iniciação da variável k irá ter a codificação a se avaliar
-  for(int j = 1 ; j <= _c_->max_bits && (j+encoded_idx) <= strlen(_encoded_message_); j++){ // itera sobre a codificação da mensagem desde onde estamos até ao máximo k uma codificação pode ter de bits 
-    strncpy(val, _encoded_message_ + encoded_idx, j);                                       // copia substring a avaliar se é uma codificação
-    val[j] = '\0';                                                                          // por terminador nulo no fim para se ter uma string                                               
-    for(int i = 0 ; i <= _c_->n_symbols ; i++){                                             // itera sobre as codificações
-      if(strcmp(_c_->data[i].codeword, val)==0){                                            // encontra-se uma codificação possivel
-        retVal = 1;                                                                         // altera-se o bool k representa a existencia de uma codificação possivel
-        encoded_idx += j;                                                                   // incrementar o numero de bits a codificação teve
-        _decoded_message_[decoded_idx] = i;                                                 // assumir o simbolo encontrado como certo
-        if(_original_message_[decoded_idx] == i)                                            // verificar se o decoded simbolo é o certp
-          good_decoded_size ++;                                                             // encrementar numero certo de decoded simbols se for o certo
-        decoded_idx ++;                                                                     // incrementar o decoded_idx
-        recursive_decoder(encoded_idx,decoded_idx,good_decoded_size);                       // aceitar como a codificação encontrada nesta iteração como certa e ir para o próximo
-        encoded_idx -= j;                                                                   // decrementar o numero de bits k a codificação encontrada teve
-        decoded_idx --;                                                                     // decrementar o decoded_idx
+  char val[_c_->max_bits + 1];                                                                              // iniciação da variável k irá ter a codificação a se avaliar
+  for(int j = 1 ; j <= _c_->max_bits && (j+encoded_idx) <= strlen(_encoded_message_); j++){                 // itera sobre a codificação da mensagem desde onde estamos até ao máximo k uma codificação pode ter de bits 
+    strncpy(val, _encoded_message_ + encoded_idx, j);                                                       // copia substring a avaliar se é uma codificação
+    val[j] = '\0';                                                                                          // por terminador nulo no fim para se ter uma string                                               
+    for(int i = 0 ; i < _c_->n_symbols ; i++){                                                              // itera sobre as codificações
+      if(strcmp(_c_->data[i].codeword, val)==0){                                                            // encontra-se uma codificação possivel
+        retVal = 1;                                                                                         // altera-se o bool k representa a existencia de uma codificação possivel
+        encoded_idx += j;                                                                                   // incrementar o numero de bits a codificação teve
+        _decoded_message_[decoded_idx] = i;                                                                 // assumir o simbolo encontrado como certo
+        if(_original_message_[decoded_idx] == i)                                                            // verificar se o decoded simbolo é o certp
+          good_decoded_size ++;                                                                             // encrementar numero certo de decoded simbols se for o certo
+        decoded_idx ++;                                                                                     // incrementar o decoded_idx
+        recursive_decoder(encoded_idx,decoded_idx,good_decoded_size);                                       // aceitar como a codificação encontrada nesta iteração como certa e ir para o próximo
+        encoded_idx -= j;                                                                                   // decrementar o numero de bits k a codificação encontrada teve
+        decoded_idx --;                                                                                     // decrementar o decoded_idx
       }
     }
   }
 
   //Dead End
-  if(retVal==0)                                                                             // atingiu um dead end
+  if(retVal==0)                                                                                             // atingiu um dead end
+   return;
+}
+#endif
+
+// Code 2.0
+#if 1
+// Função de decodificação
+static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
+{ 
+  _number_of_calls_ ++;                                                                                     // incremento do numero de calls da recurse 
+  int retVal = 0;                                                                                           // bool da existencia de uma codificação para o que se tem  
+  static int min_size;                                                                                      // iniciação da variável k representa o tamanho minimo das codificações
+  // Definir minimo size de codeword                    
+  if(encoded_idx == 0 && decoded_idx == 0)                                                                  // caso seja o inicio da das recursões averigua-se o tamanho
+  {                                                                                                         //
+    min_size = _c_->max_bits;                                                                               // definir minimo como igual ao máximo size possivel dos codes                                                           
+    for(int i=0 ; i < _c_->n_symbols ; i++)                                                                 // iteração pelas codificações
+    {                                                                                                       //
+      if(min_size > strlen(_c_->data[i].codeword))                                                          // verificação se existe codificação menor k a encotrada
+        min_size = strlen(_c_->data[i].codeword);                                                           //
+    }                                                                                                       //
+  }                                                                                                         //
+  // Caso Terminal
+  if((decoded_idx == _original_message_size_)){                                                             // verificação se a mensagem decoded tem o mesmo tamanho k a original
+    if(encoded_idx == strlen(_encoded_message_)){                                                           // verificação se foi percorrido todos os encoded bits
+      _number_of_solutions_ ++;                                                                             // encremento do numero de soluções
+    }                                                                                                       //
+    return;                                                                                                 //
+  }                                                                                                         //  
+  char val[_c_->max_bits + 1];                                                                              // iniciação da variável k irá ter a codificação a se avaliar
+  // Tentativa de descodificação min_size by min_size
+  for(int j = min_size ; j <= _c_->max_bits && (j+encoded_idx) <= strlen(_encoded_message_); j++){          // itera sobre a codificação da mensagem desde onde estamos até ao máximo k uma codificação pode ter de bits 
+    strncpy(val, _encoded_message_ + encoded_idx, j);                                                       // copia substring a avaliar se é uma codificação
+    val[j] = '\0';                                                                                          // por terminador nulo no fim para se ter uma string                                               
+    for(int i = 0 ; i <= _c_->n_symbols ; i++){                                                             // itera sobre as codificações
+      if(strcmp(_c_->data[i].codeword, val)==0){                                                            // encontra-se uma codificação possivel
+        retVal = 1;                                                                                         // altera-se o bool k representa a existencia de uma codificação possivel
+        encoded_idx += j;                                                                                   // incrementar o numero de bits a codificação teve
+        _decoded_message_[decoded_idx] = i;                                                                 // assumir o simbolo encontrado como certo
+        if(_original_message_[decoded_idx] == i)                                                            // verificar se o decoded simbolo é o certp
+          good_decoded_size ++;                                                                             // encrementar numero certo de decoded simbols se for o certo
+        decoded_idx ++;                                                                                     // incrementar o decoded_idx
+        recursive_decoder(encoded_idx,decoded_idx,good_decoded_size);                                       // aceitar como a codificação encontrada nesta iteração como certa e ir para o próximo
+        encoded_idx -= j;                                                                                   // decrementar o numero de bits k a codificação encontrada teve
+        decoded_idx --;                                                                                     // decrementar o decoded_idx
+      }
+    }
+  }
+
+  //Dead End
+  if(retVal==0)                                                                                             // atingiu um dead end
    return;
 }
 
-
+#endif
 //
 // Encode and decode driver
 //
