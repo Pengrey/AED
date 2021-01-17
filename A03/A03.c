@@ -518,6 +518,50 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
 #endif
 
 // Code 4.0
+#if 1
+static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
+{                                                                                                           //
+  _number_of_calls_ ++;                                                                                     // incremento do numero de calls da recurse 
+  int retVal = 0;                                                                                           // bool da existencia de uma codificação para o que se tem  
+
+  // Caso Terminal
+  if((decoded_idx == _original_message_size_)){                                                             //
+    if(encoded_idx == strlen(_encoded_message_))                                                            // 
+      _number_of_solutions_ ++;                                                                             // encremento do numero de soluções
+    return;
+  }
+  for(int j = 1 ; j <= _c_->max_bits && (j+encoded_idx) <= strlen(_encoded_message_); j++){                 // itera sobre a codificação da mensagem desde onde estamos até ao máximo k uma codificação pode ter de bits 
+    for(int i = 0 ; i < _c_->n_symbols ; i++){                                                              // itera sobre as codificações
+      char* code = _c_->data[i].codeword;                                                                   // guarda-se a codificação a se testar
+      for(int k = 0 ; k<=(j-1) && code[k]!='\0' ; k++){                                                     // para cada bit da codificação a se comparar
+        if(strlen(code) != j || code[k] != _encoded_message_[encoded_idx + k])                              // verifica-se se o tamanho da codificação é igual à pretendida e se possui os bits iguais
+          break;                                                                                            // dá-se break para testar outra codificação caso n seja
+        if(k+1==j)                                                                                          // caso se esteja no final
+          retVal = 1;                                                                                       // altera-se o bool k representa a existencia de uma codificação possivel
+      }                                                                                                     //
+      if(retVal){                                                                                           // encontra-se uma codificação possivel
+        retVal = 0;                                                                                         // altera-se o bool k representa a existencia de uma codificação possivel
+        encoded_idx += j;                                                                                   // incrementar o numero de bits a codificação teve
+        _decoded_message_[decoded_idx] = i;                                                                 // assumir o simbolo encontrado como certo
+        if(_original_message_[decoded_idx] == i)                                                            // verificar se o decoded simbolo é o certp
+          good_decoded_size ++;                                                                             // encrementar numero certo de decoded simbols se for o certo
+        decoded_idx ++;                                                                                     // incrementar o decoded_idx
+        recursive_decoder(encoded_idx,decoded_idx,good_decoded_size);                                       // aceitar como a codificação encontrada nesta iteração como certa e ir para o próximo
+        encoded_idx -= j;                                                                                   // decrementar o numero de bits k a codificação encontrada teve
+        decoded_idx --;                                                                                     // decrementar o decoded_idx
+      }                                                                                                     //
+    }                                                                                                       //
+  }                                                                                                         //
+
+  //Dead End
+  if(retVal==0)                                                                                             // atingiu um dead end
+   return;                                                                                                  //
+}                                                                                                           //
+  
+#endif
+
+
+// Code 5.0
 #if 0
 // Função de decodificação
 static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
@@ -575,8 +619,8 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
 
 #endif
 
-// Code 5.0
-#if 1
+// Code 6.0
+#if 0
 // Função de decodificação
 static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
 {                                                                                                           //
