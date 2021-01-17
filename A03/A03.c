@@ -317,6 +317,7 @@ struct
   long     number_of_calls;          // the number of recursive function calls
   long     number_of_solutions;      // the number of solutions (at the end, is all is well, must be equal to 1)
   int      max_extra_symbols;        // the largest difference between the partially decoded message and the good part of the partially decoded message)
+  //int    * sorted;                   // array of the indexes sorted by their value length  
 }
 decoder_global_data;
 
@@ -330,7 +331,7 @@ decoder_global_data;
 #define _number_of_calls_           decoder_global_data.number_of_calls
 #define _number_of_solutions_       decoder_global_data.number_of_solutions
 #define _max_extra_symbols_         decoder_global_data.max_extra_symbols
-
+//#define sorted                      decoder_global_data.sorted
 
 //
 // Recursive decoder
@@ -518,7 +519,7 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
 #endif
 
 // Code 4.0
-#if 1
+#if 0
 static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
 {                                                                                                           //
   _number_of_calls_ ++;                                                                                     // incremento do numero de calls da recurse 
@@ -559,7 +560,6 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
 }                                                                                                           //
   
 #endif
-
 
 // Code 5.0
 #if 0
@@ -703,6 +703,99 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
 } 
 # endif
 
+
+// Code 7.0
+#if 0
+static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
+{                                                                                                                             //
+  //static int *sorted;                                                                                                         // iniciação do array k repreenta os indices da matriz das codificações sorted pelo length
+  _number_of_calls_ ++;                                                                                                       // incremento do numero de calls da recurse 
+
+  // Preparar sorted array por length                    
+  if(encoded_idx == 0 && decoded_idx == 0)                                                                                    // caso seja o inicio da das recursões averigua-se o tamanho
+  {                                                                                                                           //
+    sorted =(int *) malloc(_c_->n_symbols *sizeof(int));                                                                      // alocação de memória
+    char codes[_c_->n_symbols][_c_->max_bits + 1];                                                                            // criação de uma matrix de codificações para dar sort e saber os sorted indexes
+    for(int i=0 ; i < _c_->n_symbols ; i++)                                                                                   // iteração pelas codificações
+    {                                                                                                                         //
+      // Por os indices no sorted 
+      sorted[i] = i;                                                                                                          // inserção dos indices 
+  
+      // Copiar as codificações para dar sort
+      strcpy(codes[i],_c_->data[i].codeword);                                                                                 // cópia das codificações para o array onde se irá fazer sort    
+    }                                                                                                                         //    
+                                                                                                              
+    // Sort do array cópia em função dos sizes de codificação (Insertion sort)
+    for (int i=1 ;i<_c_->n_symbols; i++)                                                                                      //
+    {                                                                                                                         //
+        char temp[strlen(codes[i])+1];                                                                                        //
+        strcpy(temp,codes[i]);                                                                                                //
+        int tempi = sorted[i];                                                                                                //  
+        int j = i - 1;                                                                                                        //
+        while (j >= 0 && strlen(temp) < strlen(codes[j]))                                                                     //
+        {                                                                                                                     //
+            strcpy(codes[j+1],codes[j]);                                                                                      //
+            sorted[j+1]= sorted[j];                                                                                           //
+            j--;                                                                                                              //
+        }                                                                                                                     //
+        strcpy(codes[j+1],temp);                                                                                              //
+        sorted[j+1] = tempi;                                                                                                  //
+    }                                                                                                                         //
+  }                                                                                                                           // 
+
+  // Caso Terminal
+  if(_encoded_message_[encoded_idx] == '\0'){                                                                                 //
+    _number_of_solutions_ ++;                                                                                                 // encremento do numero de soluções
+    return;                                                                                                                   //  
+  }                                                                                                                           //
+
+  // Procura de simbolos
+  for(int i = 0 ; i < _c_->n_symbols ; i++){                                                                                  // itera sobre as codificações
+    int j;                                                                                                                    //
+    for(j = 0 ; j < _c_->max_bits && _c_->data[sorted[i]].codeword[j] != '\0' ; j++){                                         // itera sobre a codificação da mensagem desde onde estamos até ao máximo k uma codificação pode ter de bits 
+      if(_c_->data[sorted[i]].codeword[j] != _encoded_message_[encoded_idx + j] || _encoded_message_[j+encoded_idx] == '\0')  // verifica-se se os chars são iguais
+        break;                                                                                                                // dá-se break para testar outra codificação caso n seja
+    }                                                                                                                         //
+    if(_c_->data[sorted[i]].codeword[j] == '\0' && _number_of_solutions_ != 1L){                                              // chegasse ao final da codificação com tds os bit iguais e ainda n se encontrou uma codificação certa
+      _decoded_message_[decoded_idx] = sorted[i];                                                                             // assumir o simbolo encontrado como certo
+      if(_original_message_[decoded_idx] == sorted[i])                                                                        // verificar se o decoded simbolo é o certo
+        good_decoded_size ++;                                                                                                 // encrementar numero certo de decoded simbols se for o certo
+      recursive_decoder(encoded_idx + j,decoded_idx + 1, good_decoded_size);                                                  // aceitar como a codificação encontrada nesta iteração como certa e ir para o próximo
+    }                                                                                                                         //
+  }                                                                                                                           //
+}                                                                                                                             //
+  
+#endif
+
+// Code 8.0
+#if 1
+static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
+{                                                                                                                             //
+  _number_of_calls_ ++;                                                                                                       // incremento do numero de calls da recurse 
+
+  // Caso Terminal
+  if(_encoded_message_[encoded_idx] == '\0'){                                                                                 //
+    _number_of_solutions_ ++;                                                                                                 // encremento do numero de soluções
+    return;                                                                                                                   //  
+  }                                                                                                                           //
+
+  // Procura de simbolos
+  for(int i = 0 ; i < _c_->n_symbols ; i++){                                                                                  // itera sobre as codificações
+    int j;                                                                                                                    //
+    for(j = 0 ; j < _c_->max_bits && _c_->data[i].codeword[j] != '\0' ; j++){                                                 // itera sobre a codificação da mensagem desde onde estamos até ao máximo k uma codificação pode ter de bits 
+      if(_c_->data[i].codeword[j] != _encoded_message_[encoded_idx + j] || _encoded_message_[j+encoded_idx] == '\0')          // verifica-se se os chars são iguais
+        break;                                                                                                                // dá-se break para testar outra codificação caso n seja
+    }
+    if(_c_->data[i].codeword[j] == '\0' && _number_of_solutions_ != 1L){                                                      // chegasse ao final da codificação com tds os bit iguais e ainda n se tem soluções
+      _decoded_message_[decoded_idx] = i;                                                                                     // assumir o simbolo encontrado como certo
+      if(_original_message_[decoded_idx] == i)                                                                                // verificar se o decoded simbolo é o certo
+        good_decoded_size ++;                                                                                                 // encrementar numero certo de decoded simbols se for o certo
+      recursive_decoder(encoded_idx + j,decoded_idx + 1, good_decoded_size);                                                  // aceitar como a codificação encontrada nesta iteração como certa e ir para o próximo
+    }                                                                                                                         //
+  }                                                                                                                           //
+}                                                                                                                             //
+  
+#endif
 
 //
 // Encode and decode driver
