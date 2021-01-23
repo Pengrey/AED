@@ -757,7 +757,6 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
   // Caso Terminal
   if(_encoded_message_[encoded_idx] == '\0'){                                                                                 //
     _number_of_solutions_ ++;                                                                                                 // incremento do numero de soluções
-    free(sorted);                                                                                                             //
     return;                                                                                                                   //  
   }                                                                                                                           //
 
@@ -769,7 +768,7 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
         break;                                                                                                                // dá-se break para testar outra codificação caso n seja
     }                                                                                                                         //
     if(_c_->data[sorted[i]].codeword[j] == '\0' && _number_of_solutions_ != 1L){                                              // chegasse ao final da codificação com tds os bit iguais e ainda n se encontrou uma codificação certa
-      _decoded_message_[decoded_idx] = sorted[i];                                                                             // assumir o simbolo encontrado como certo
+
       if(_original_message_[decoded_idx] == sorted[i])                                                                        // verificar se o decoded simbolo é o certo
         good_decoded_size ++;                                                                                                 // encrementar numero certo de decoded simbols se for o certo
       if((decoded_idx - good_decoded_size) > _max_extra_symbols_)                                                             // caso o numero de simbolos extras nesta iteração seja maior ao max até agr
@@ -782,7 +781,7 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
 #endif
 
 // Code 8.0
-#if 1
+#if 0
 static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
 {                                                                                                                             //
   _number_of_calls_ ++;                                                                                                       // incremento do numero de calls da recurse 
@@ -804,9 +803,175 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
       _decoded_message_[decoded_idx] = i;                                                                                     // assumir o simbolo encontrado como certo
       if(_original_message_[decoded_idx] == i)                                                                                // verificar se o decoded simbolo é o certo
         good_decoded_size ++;                                                                                                 // encrementar numero certo de decoded simbols se for o certo
-      if((decoded_idx - good_decoded_size) > _max_extra_symbols_)                                                             // caso o numero de simbolos extras nesta iteração seja maior ao max até agr
+      if((decoded_idx + 1- good_decoded_size) > _max_extra_symbols_)                                                         // caso o numero de simbolos extras nesta iteração seja maior ao max até agr
         _max_extra_symbols_ = ((decoded_idx+1) - good_decoded_size);                                                          // define-se o max até agr de simbolos extras como o obtido agr
       recursive_decoder(encoded_idx + j,decoded_idx + 1, good_decoded_size);                                                  // aceitar como a codificação encontrada nesta iteração como certa e ir para o próximo
+    }                                                                                                                         //
+  }                                                                                                                           //
+}                                                                                                                             //
+  
+#endif
+
+// Code 9.0
+#if 0
+static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
+{                                                                                                                             //
+  _number_of_calls_ ++;                                                                                                       // incremento do numero de calls da recurse 
+  static int *sorted;                                                                                                         //
+  
+  // Caso inicio do programa -> sort array pelo length da codificação 
+  if(encoded_idx == 0 && decoded_idx == 0){
+    sorted =(int *) malloc(_c_->n_symbols *sizeof(int));                                                                      //
+    int codes[_c_->n_symbols];                                                                                                // cópia das codificações para o array onde se irá fazer sort    
+    codes[0] = strlen(_c_->data[0].codeword);
+    for (int i=1 ;i<_c_->n_symbols; i++)                                                                                      //
+    {                                                                                                                         //
+      int temp = strlen(_c_->data[i].codeword);                                                                               //
+      int tempi = i;                                                                                                          //  
+      int j = i - 1;                                                                                                          //
+      while (j >= 0 && temp < codes[j])                                                                                       //
+      {                                                                                                                       //
+        codes[j+1] = codes[j];                                                                                                //
+        sorted[j+1] = sorted[j];                                                                                              //
+        j--;                                                                                                                  //
+      }                                                                                                                       //
+      codes[j+1] = temp;                                                                                                      //
+      sorted[j+1] = tempi;                                                                                                    //
+    }                                                                                                                         //
+  }                                                                                                                           // 
+
+  // Caso Terminal
+  if(_encoded_message_[encoded_idx] == '\0'){                                                                                 //
+    _number_of_solutions_ ++;                                                                                                 // incremento do numero de soluções
+    return;                                                                                                                   //  
+  }                                                                                                                           //
+
+  // Procura de simbolos
+  for(int i = 0 ; i < _c_->n_symbols ; i++){                                                                                  // itera sobre as codificações
+    int j;                                                                                                                    //
+    for(j = 0 ; j < _c_->max_bits && _c_->data[sorted[i]].codeword[j] != '\0' ; j++){                                         // itera sobre a codificação da mensagem desde onde estamos até ao máximo k uma codificação pode ter de bits 
+      if(_c_->data[sorted[i]].codeword[j] != _encoded_message_[encoded_idx + j] || _encoded_message_[j+encoded_idx] == '\0')  // verifica-se se os chars são iguais
+        break;                                                                                                                // dá-se break para testar outra codificação caso n seja
+    }                                                                                                                         //
+    if(_c_->data[sorted[i]].codeword[j] == '\0' && _number_of_solutions_ != 1L){                                              // chegasse ao final da codificação com tds os bit iguais e ainda n se encontrou uma codificação certa
+      _decoded_message_[decoded_idx] = sorted[i];                                                                             // assumir o simbolo encontrado como certo
+      if(_original_message_[decoded_idx] == sorted[i])                                                                        // verificar se o decoded simbolo é o certo
+        good_decoded_size ++;                                                                                                 // encrementar numero certo de decoded simbols se for o certo
+      if((decoded_idx + 1 - good_decoded_size) > _max_extra_symbols_)                                                         // caso o numero de simbolos extras nesta iteração seja maior ao max até agr
+        _max_extra_symbols_ = ((decoded_idx+1) - good_decoded_size);                                                          // define-se o max até agr de simbolos extras como o obtido agr
+      recursive_decoder(encoded_idx + j,decoded_idx + 1, good_decoded_size);                                                  // aceitar como a codificação encontrada nesta iteração como certa e ir para o próximo
+    }                                                                                                                         //
+  }                                                                                                                           //
+}                                                                                                                             //
+  
+#endif
+
+// Opcional 1.0
+ 
+#if 0
+static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
+{                                                                                                                             //
+  _number_of_calls_ ++;                                                                                                       // incremento do numero de calls da recurse 
+
+  // Calculo do numero de bits que faltam de ser descodificados até agora da codificação atual
+  int code_decoded = 0;                                                                                                       //
+  for(int d = 1 ; d <= decoded_idx ; d ++){                                                                                   // percorre todas as descodificações até agora aceites neste ramo
+    for(int b = 0 ; _c_->data[_decoded_message_[d - 1]].codeword[b] != '\0' ; b++)                                            // percorre o numero de bits de cada codificação encontrada até agora
+      code_decoded++;                                                                                                         // encrementa-se o numero de bits previamente analisados
+  }                                                                                                                           //
+  code_decoded = code_decoded - encoded_idx;                                                                                  // número de bits que nos falta codificar
+
+  // Caso Terminal
+  if(_encoded_message_[encoded_idx] == '\0' && code_decoded == 0){                                                                                 // caso se chegue ao final da mensagem
+    _number_of_solutions_ ++;                                                                                                 // incremento do numero de soluções
+    
+    // Print what we got and the right solution
+    printf("\nOriginal:\n");
+    for(int i = 0 ; i < _original_message_size_; i++)
+      printf("%d",_original_message_[i]);
+    printf("\nDecoded:\n");
+    for(int i = 0 ; i < _original_message_size_; i++)
+      printf("%d",_decoded_message_[i]);
+    printf("\n");
+    return;                                                                                                                   //  
+  } 
+ 
+  // Procura de possiveis codificações para futura verificações
+  if(code_decoded == 0){                                                                                                      // caso n nos falte codificar nenhum
+    for(int i = 0 ; i < _c_->n_symbols ; i++){                                                                                // iteração por todas as codificações
+      if(_encoded_message_[encoded_idx] == _c_->data[i].codeword[0]){                                                         // procura-se uma codificação k tenha o inicio semelhante ao bit atualmente recebido
+        _decoded_message_[decoded_idx] = i;                                                                                   // simbolo k se inicia com o bit recebido
+        if(_original_message_[decoded_idx] == i)                                                                              // verificar se o decoded simbolo é o certo
+          good_decoded_size ++;                                                                                               // encrementar numero certo de decoded simbols se for o certo
+        if((decoded_idx + 1 - good_decoded_size) > _max_extra_symbols_)                                                       // caso o numero de simbolos extras nesta iteração seja maior ao max até agr
+          _max_extra_symbols_ = ((decoded_idx+1) - good_decoded_size);                                                        // define-se o max até agr de simbolos extras como o obtido agr
+        recursive_decoder(encoded_idx + 1, decoded_idx + 1, good_decoded_size);                                               // chamamento da função para se confirmar o próximo bit
+      }                                                                                                                       //
+    }                                                                                                                         //
+
+  // Verificação dos bits dentro da codificaçao a se avaliar
+  }else{                                                                                                                      // falta verificar ainda alguns bits
+    code_decoded = strlen(_c_->data[_decoded_message_[decoded_idx - 1]].codeword ) - code_decoded;                            // index do bit onde estamos em relação à codificação atualmente a ser avaliada
+    if(_c_->data[_decoded_message_[decoded_idx - 1]].codeword[code_decoded] == _encoded_message_[encoded_idx]){               // caso o bit a ser analisado atualmente seja igual ao bit da posição respetiva dentro  da codificação
+      recursive_decoder(encoded_idx + 1, decoded_idx, good_decoded_size);                                                     // faz-se chamamento da função para o bit seguinte
+    }else{                                                                                                                    // caso os bits sejam errados
+      return;                                                                                                                 // a codificação testada está errada
+    }                                                                                                                         //
+  }                                                                                                                           //
+}                                                                                                                             //
+  
+#endif
+
+// Opcional 2.0
+ 
+#if 1
+static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
+{                                                                                                                             //
+  _number_of_calls_ ++;                                                                                                       // incremento do numero de calls da recurse 
+
+  // Calculo do numero de bits que faltam de ser descodificados até agora da codificação atual
+  int code_decoded = 0;                                                                                                       //
+  for(int d = 1 ; d <= decoded_idx ; d ++){                                                                                   // percorre todas as descodificações até agora aceites neste ramo
+    for(int b = 0 ; _c_->data[_decoded_message_[d - 1]].codeword[b] != '\0' ; b++)                                            // percorre o numero de bits de cada codificação encontrada até agora
+      code_decoded++;                                                                                                         // encrementa-se o numero de bits previamente analisados
+  }                                                                                                                           //
+  code_decoded = code_decoded - encoded_idx;                                                                                  // número de bits que nos falta codificar
+
+  // Caso Terminal
+  if(_encoded_message_[encoded_idx] == '\0' && code_decoded == 0){                                                            // caso se chegue ao final da mensagem
+    _number_of_solutions_ ++;                                                                                                 // incremento do numero de soluções
+    
+    // Print what we got and the right solution
+    printf("\nOriginal:\n");
+    for(int i = 0 ; i < _original_message_size_; i++)
+      printf("%d",_original_message_[i]);
+    printf("\nDecoded:\n");
+    for(int i = 0 ; i < _original_message_size_; i++)
+      printf("%d",_decoded_message_[i]);
+    printf("\n");
+    return;                                                                                                                   //  
+  } 
+ 
+  // Procura de possiveis codificações para futura verificações
+  if(code_decoded == 0){                                                                                                      // caso n nos falte codificar nenhum
+    for(int i = 0 ; i < _c_->n_symbols ; i++){                                                                                // iteração por todas as codificações
+      if(_encoded_message_[encoded_idx] == _c_->data[i].codeword[0] && _number_of_solutions_ != 1L){                          // procura-se uma codificação k tenha o inicio semelhante ao bit atualmente recebido
+        _decoded_message_[decoded_idx] = i;                                                                                   // simbolo k se inicia com o bit recebido
+        if(_original_message_[decoded_idx] == i)                                                                              // verificar se o decoded simbolo é o certo
+          good_decoded_size ++;                                                                                               // encrementar numero certo de decoded simbols se for o certo
+        if((decoded_idx + 1 - good_decoded_size) > _max_extra_symbols_)                                                       // caso o numero de simbolos extras nesta iteração seja maior ao max até agr
+          _max_extra_symbols_ = ((decoded_idx+1) - good_decoded_size);                                                        // define-se o max até agr de simbolos extras como o obtido agr
+        recursive_decoder(encoded_idx + 1, decoded_idx + 1, good_decoded_size);                                               // chamamento da função para se confirmar o próximo bit
+      }                                                                                                                       //
+    }                                                                                                                         //
+
+  // Verificação dos bits dentro da codificaçao a se avaliar
+  }else{                                                                                                                      // falta verificar ainda alguns bits
+    code_decoded = strlen(_c_->data[_decoded_message_[decoded_idx - 1]].codeword ) - code_decoded;                            // index do bit onde estamos em relação à codificação atualmente a ser avaliada
+    if(_c_->data[_decoded_message_[decoded_idx - 1]].codeword[code_decoded] == _encoded_message_[encoded_idx] && _number_of_solutions_ != 1L){//bit a ser analisado atualmente seja igual ao bit da posição respetiva dentro  da codificação
+      recursive_decoder(encoded_idx + 1, decoded_idx, good_decoded_size);                                                     // faz-se chamamento da função para o bit seguinte
+    }else{                                                                                                                    // caso os bits sejam errados
+      return;                                                                                                                 // a codificação testada está errada
     }                                                                                                                         //
   }                                                                                                                           //
 }                                                                                                                             //
