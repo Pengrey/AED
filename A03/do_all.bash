@@ -1,6 +1,6 @@
 #! /bin/bash
-
-for n in {100..3}; do
+ulimit -s 16384
+for n in {101..1000}; do
   if [ -e stop_request ]; then
     exit 0
   fi

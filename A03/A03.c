@@ -13,7 +13,7 @@
 //
 
 #ifndef MAX_N_SYMBOLS
-# define MAX_N_SYMBOLS         100 // maximum number of alphabet symbols in a code
+# define MAX_N_SYMBOLS         1000 // maximum number of alphabet symbols in a code
 #endif
 #ifndef MAX_CODEWORD_SIZE
 # define MAX_CODEWORD_SIZE      23 // maximum number of bits of a codeword
@@ -781,7 +781,7 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
 #endif
 
 // Code 8.0
-#if 0
+#if 1
 static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
 {                                                                                                                             //
   _number_of_calls_ ++;                                                                                                       // incremento do numero de calls da recurse 
@@ -924,7 +924,7 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
 
 // Opcional 2.0
  
-#if 1
+#if 0
 static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size)
 {                                                                                                                             //
   _number_of_calls_ ++;                                                                                                       // incremento do numero de calls da recurse 
