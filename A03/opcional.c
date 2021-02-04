@@ -13,7 +13,7 @@
 //
 
 #ifndef MAX_N_SYMBOLS
-# define MAX_N_SYMBOLS         100 // maximum number of alphabet symbols in a code
+# define MAX_N_SYMBOLS         1000 // maximum number of alphabet symbols in a code
 #endif
 #ifndef MAX_CODEWORD_SIZE
 # define MAX_CODEWORD_SIZE      23 // maximum number of bits of a codeword
@@ -405,30 +405,20 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
 // Opcional 2.0
  
 #if 1
-static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size,int code_decoded)
+static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size,int time_lag)
 {                                                                                                                             //
   _number_of_calls_ ++;                                                                                                       // incremento do numero de calls da recurse 
 
   // Caso Terminal
-  if(_encoded_message_[encoded_idx] == '\0' && code_decoded == 0){                                                            // caso se chegue ao final da mensagem
+  if(_encoded_message_[encoded_idx] == '\0' && time_lag == 0){                                                                // caso se chegue ao final da mensagem
     _number_of_solutions_ ++;                                                                                                 // incremento do numero de soluções
-    
-    /* Print what we got and the right solution
-    printf("\nOriginal:\n");
-    for(int i = 0 ; i < _original_message_size_; i++)
-      printf("%d",_original_message_[i]);
-    printf("\nDecoded:\n");
-    for(int i = 0 ; i < _original_message_size_; i++)
-      printf("%d",_decoded_message_[i]);
-    printf("\n");
-    */
-    return;
-  } 
+    return;                                                                                                                   //
+  }                                                                                                                           //
  
   // Procura de possiveis codificações para futura verificações
-  if(code_decoded == 0){                                                                                                      // caso n nos falte codificar nenhum
+  if(time_lag == 0){                                                                                                          // caso n nos falte codificar nenhum
     for(int i = 0 ; i < _c_->n_symbols ; i++){                                                                                // iteração por todas as codificações
-      if(_encoded_message_[encoded_idx] == _c_->data[i].codeword[0]){                                                         // procura-se uma codificação k tenha o inicio semelhante ao bit atualmente recebido
+      if(_encoded_message_[encoded_idx] == _c_->data[i].codeword[0] && _number_of_solutions_ != 1L){                          // procura-se uma codificação k tenha o inicio semelhante ao bit atualmente recebido
         _decoded_message_[decoded_idx] = i;                                                                                   // simbolo k se inicia com o bit recebido
         if(_original_message_[decoded_idx] == i)                                                                              // verificar se o decoded simbolo é o certo
           good_decoded_size ++;                                                                                               // encrementar numero certo de decoded simbols se for o certo
@@ -440,9 +430,9 @@ static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_s
 
   // Verificação dos bits dentro da codificaçao a se avaliar
   }else{                                                                                                                      // falta verificar ainda alguns bits
-    int code_idx = strlen(_c_->data[_decoded_message_[decoded_idx - 1]].codeword ) - code_decoded;                            // index do bit onde estamos em relação à codificação atualmente a ser avaliada
-    if(_c_->data[_decoded_message_[decoded_idx - 1]].codeword[code_idx] == _encoded_message_[encoded_idx]){                   // caso o bit a ser analisado atualmente seja igual ao bit da posição respetiva dentro  da codificação
-      recursive_decoder(encoded_idx + 1, decoded_idx, good_decoded_size, code_decoded - 1);                                   // faz-se chamamento da função para o bit seguinte
+    int code_idx = strlen(_c_->data[_decoded_message_[decoded_idx - 1]].codeword ) - time_lag;                                // index do bit onde estamos em relação à codificação atualmente a ser avaliada
+    if(_c_->data[_decoded_message_[decoded_idx - 1]].codeword[code_idx] == _encoded_message_[encoded_idx] && _number_of_solutions_ !=1L){// caso o bit a ser analisado atualmente seja igual ao bit da posição respetiva dentro  da codificação
+      recursive_decoder(encoded_idx + 1, decoded_idx, good_decoded_size, time_lag - 1);                                       // faz-se chamamento da função para o bit seguinte
     }else{                                                                                                                    // caso os bits sejam errados
       return;                                                                                                                 // a codificação testada está errada
     }                                                                                                                         //
