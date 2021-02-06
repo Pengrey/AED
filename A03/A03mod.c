@@ -350,7 +350,7 @@ decoder_global_data;
 static void recursive_decoder(int encoded_idx,int decoded_idx,int good_decoded_size,int * possibilities)
 {                                                                                                                             //
   _number_of_calls_ ++;                                                                                                       // incremento do numero de calls da recurse 
-
+  possibilities[decoded_idx] = 0;
   // Caso Terminal
   if(_encoded_message_[encoded_idx] == '\0'){                                                                                 //
     _number_of_solutions_ ++;                                                                                                 // incremento do numero de soluções
@@ -433,6 +433,7 @@ void try_it(code_t *c,int message_size,int show_results)
   free(_original_message_); _original_message_ = NULL;
   free(_encoded_message_);  _encoded_message_  = NULL;
   free(_decoded_message_);  _decoded_message_  = NULL;
+  free(possibilities); possibilities = NULL;
 }
 
 
